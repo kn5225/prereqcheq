@@ -1,3 +1,8 @@
+var VefifMode = document.getElementById("VerifMode");
+VerifMode.addEventListener(click,VerMode());
+var ReccomMode = document.getElementById("ReccomMode");
+VerifMode.addEventListener(click,RecMode());
+
 VerMode() {
   var input=document.createElement("input");
   input.type = "text";
