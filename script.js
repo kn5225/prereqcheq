@@ -3,7 +3,7 @@ VerifMode.addEventListener(click,VerMode());
 var ReccomMode = document.getElementById("ReccomMode");
 VerifMode.addEventListener(click,RecMode());
 
-VerMode() {
+function VerMode() {
   var input=document.createElement("input");
   input.type = "text";
   input.id="VerInput";
