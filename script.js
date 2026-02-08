@@ -1,7 +1,7 @@
 var VefifMode = document.getElementById("VerifMode");
-VerifMode.addEventListener(click,VerMode());
+VerifMode.addEventListener("click",VerMode());
 var ReccomMode = document.getElementById("ReccomMode");
-VerifMode.addEventListener(click,RecMode());
+VerifMode.addEventListener("click",RecMode());
 
 function VerMode() {
   var input=document.createElement("input");
@@ -15,5 +15,5 @@ function VerMode() {
   element2.appendChild(input);
   element2.appendChild(button);
   var element3=document.getElementById("VerModeSubmit");
-  element3.addEventListener(click, VerModeAccept);
+  element3.addEventListener("click", VerModeAccept);
 }
