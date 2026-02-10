@@ -17,3 +17,11 @@ function VerMode() {
   const element3=document.getElementById("VerModeSubmit");
   element3.addEventListener("click", VerModeAccept);
 }
+
+function VerModeAccept() {
+  const VerInpResult = document.getElementbyId("VerInput");
+  var VerClass = VerInpResult.value;
+  var VerValues = VerClass.split(" ");
+  const url = "https://www.coursicle.com/umass/courses/" + VerValues[0]+ "/" + VerValues[1]+ "/";
+  window.open(url);
+}
