@@ -14,6 +14,6 @@ function VerMode() {
   const element2 = document.getElementById("MainArea");
   element2.appendChild(input);
   element2.appendChild(button);
-  cosnt element3=document.getElementById("VerModeSubmit");
+  const element3=document.getElementById("VerModeSubmit");
   element3.addEventListener("click", VerModeAccept);
 }
