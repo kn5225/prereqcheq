@@ -4,13 +4,15 @@ const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
 
 function VerMode() {
+  OldContent = document.getElementById(elementID);
+  OldContent.innerHTML = "";
   var input=document.createElement("input");
   input.type = "text";
   input.id="VerInput";
   var button=document.createElement("button");
-  button.type="button"
-  button.id="VerModeSubmit"
-  button.innerText="Submit"
+  button.type="button";
+  button.id="VerModeSubmit";
+  button.innerText="Submit";
   const element2 = document.getElementById("MainArea");
   element2.appendChild(input);
   element2.appendChild(button);
