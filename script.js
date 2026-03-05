@@ -1,3 +1,8 @@
+import { createClient } from "https://esm.sh/@supabase/supabase-js"
+
+const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmenNmamNtdHh2Z290enBkYWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0OTA4NDUsImV4cCI6MjA4ODA2Njg0NX0.sZgZzPYVa1iwV1wGH3eS0u9hssoTzZrZPXk7_w11Yc0")
+
+
 const VefifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
 const ReccomMode = document.getElementById("ReccomMode");
@@ -23,7 +28,15 @@ function VerMode() {
 function VerModeAccept() {
   const VerInpResult = document.getElementById("VerInput");
   var VerClass = VerInpResult.value;
-  var VerValues = VerClass.split(" ");
-  const url = "https://www.coursicle.com/umass/courses/" + VerValues[0]+ "/" + VerValues[1]+ "/";
-  window.open(url);
+  const { data, error } = await supabase
+    .from("prereqlookup")
+    .select("*")
+    .eq("COURSE", VerClass)
+  var dat=document.createElement("p");
+  dat.textContent=data;
+  dat.id="Data";
+  const element2 = document.getElementById("MainArea");
+  element2.append(dat);
+  
+  
 }
