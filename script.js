@@ -32,11 +32,23 @@ function VerModeAccept() {
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
-  var dat=document.createElement("p");
-  dat.textContent=data;
-  dat.id="Data";
   const element2 = document.getElementById("MainArea");
-  element2.appendChild(dat);
-  
-  
+  const course = data[0]
+  const prerequisites = course.prerequisites  // your JSONB array
+
+  // Render checklist
+  prerequisites.forEach((group, index) => {
+  const div = document.createElement("div")
+  const checkbox = document.createElement("input")
+  checkbox.type = "checkbox"
+  checkbox.id = `group-${index}`
+
+  const label = document.createElement("label")
+  label.htmlFor = `group-${index}`
+  label.textContent = group.join(" OR ")
+
+  div.appendChild(checkbox)
+  div.appendChild(label)
+  element2.appendChild(div)
+  })
 }
