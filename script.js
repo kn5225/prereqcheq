@@ -36,7 +36,7 @@ function VerModeAccept() {
   dat.textContent=data;
   dat.id="Data";
   const element2 = document.getElementById("MainArea");
-  element2.append(dat);
+  element2.appendChild(dat);
   
   
 }
