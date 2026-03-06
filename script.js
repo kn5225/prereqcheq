@@ -9,7 +9,7 @@ const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
 
 function VerMode() {
-  OldContent = document.getElementById("MainArea");
+  const OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
   var input=document.createElement("input");
   input.type = "text";
