@@ -3,7 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js"
 const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmenNmamNtdHh2Z290enBkYWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0OTA4NDUsImV4cCI6MjA4ODA2Njg0NX0.sZgZzPYVa1iwV1wGH3eS0u9hssoTzZrZPXk7_w11Yc0")
 
 
-const VefifMode = document.getElementById("VerifMode");
+const VerifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
 const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
@@ -32,11 +32,15 @@ async function VerModeAccept() {
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
+  if (error) {
+  console.error(error)
+  return
+  }
   const element2 = document.getElementById("MainArea");
   const course = data[0]
-  const prerequisites = course.prerequisites  // your JSONB array
+  const prerequisites = course.prerequisites
+  
 
-  // Render checklist
   prerequisites.forEach((group, index) => {
   const div = document.createElement("div")
   const checkbox = document.createElement("input")
