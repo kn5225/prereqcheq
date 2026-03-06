@@ -68,6 +68,7 @@ async function VerModeAccept() {
   })
   const result = document.createElement("p")
   result.id = "prereqResult"
+  const CheckBoxDiv = document.getElementById("checkBoxDiv");
   CheckBoxDiv.appendChild(checkButton)
   CheckBoxDiv.appendChild(result)
 }
