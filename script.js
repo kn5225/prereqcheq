@@ -32,6 +32,8 @@ async function VerModeAccept() {
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
+  console.log(data)
+  console.log(error)
   if (error) {
   console.error(error)
   return
