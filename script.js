@@ -32,8 +32,6 @@ async function VerModeAccept() {
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
-  console.log(data)
-  console.log(error)
   if (error) {
   console.error(error)
   return
@@ -41,10 +39,7 @@ async function VerModeAccept() {
   const element2 = document.getElementById("MainArea");
   const course = data[0]
   const prerequisites = course.PREREQS.prerequisites
-  console.log(typeof course.PREREQS)
-  console.log(course.PREREQS)
   
-
   prerequisites.forEach((group, index) => {
   const div = document.createElement("div")
   const checkbox = document.createElement("input")
