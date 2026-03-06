@@ -40,7 +40,7 @@ async function VerModeAccept() {
   if (error) {
   console.error(error)
   return
-  }
+            }
   const element2 = document.getElementById("MainArea");
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
@@ -57,6 +57,17 @@ async function VerModeAccept() {
   const br = document.createElement("br");
   CheckBoxDiv.appendChild(checkbox);
   CheckBoxDiv.appendChild(label);
-  CheckBoxDiv.appendChild(br);   
+  CheckBoxDiv.appendChild(br); 
   })
+  const checkButton = document.createElement("button")
+  checkButton.textContent = "Check Prerequisites"
+  checkButton.addEventListener("click", () => {
+  const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
+  const allMet = [...checkboxes].every(cb => cb.checked)
+  result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
+  })
+  const result = document.createElement("p")
+  result.id = "prereqResult"
+  CheckBoxDiv.appendChild(checkButton)
+  CheckBoxDiv.appendChild(result)
 }
