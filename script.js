@@ -54,8 +54,9 @@ async function VerModeAccept() {
   const label = document.createElement("label");
   label.htmlFor = `group-${index}`;
   label.textContent = group.join(" OR ");
-
+  const br = document.createElement("br");
   CheckBoxDiv.appendChild(checkbox);
   CheckBoxDiv.appendChild(label);
+  CheckBoxDiv.appendChild(br);   
   })
 }
