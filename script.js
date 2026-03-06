@@ -31,7 +31,6 @@ async function VerModeAccept() {
   const { data, error } = await supabase
     .from("prereqlookup")
     .select("*")
-    .eq("COURSE", VerClass)
   console.log(data)
   console.log(error)
   if (error) {
