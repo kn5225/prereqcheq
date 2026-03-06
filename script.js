@@ -38,7 +38,7 @@ async function VerModeAccept() {
   }
   const element2 = document.getElementById("MainArea");
   const course = data[0]
-  const prerequisites = course.prerequisites
+  const prerequisites = course.PREREQS
   
 
   prerequisites.forEach((group, index) => {
