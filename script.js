@@ -9,7 +9,7 @@ const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
 
 function VerMode() {
-  const OldContent = document.getElementById("MainArea");
+  let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
   var input=document.createElement("input");
   input.type = "text";
@@ -19,8 +19,11 @@ function VerMode() {
   button.id="VerModeSubmit";
   button.innerText="Submit";
   const element2 = document.getElementById("MainArea");
+  const checkBoxDiv = document.createElement("div")
+  checkBoxDiv.id="checkBoxDiv"
   element2.appendChild(input);
   element2.appendChild(button);
+  element2.appendChild(checkBox);
   const element3=document.getElementById("VerModeSubmit");
   element3.addEventListener("click", VerModeAccept);
 }
@@ -28,6 +31,8 @@ function VerMode() {
 async function VerModeAccept() {
   const VerInpResult = document.getElementById("VerInput");
   var VerClass = VerInpResult.value;
+  let OldContent = document.getElementById("checkBoxDiv");
+  OldContent.innerHTML = "";
   const { data, error } = await supabase
     .from("prereqlookup")
     .select("*")
@@ -37,21 +42,20 @@ async function VerModeAccept() {
   return
   }
   const element2 = document.getElementById("MainArea");
-  const course = data[0]
-  const prerequisites = course.PREREQS.prerequisites
+  const course = data[0];
+  const prerequisites = course.PREREQS.prerequisites;
   
   prerequisites.forEach((group, index) => {
-  const div = document.createElement("div")
-  const checkbox = document.createElement("input")
-  checkbox.type = "checkbox"
-  checkbox.id = `group-${index}`
+  const CheckBoxDiv = document.getElementById("checkBoxDiv");
+  const checkbox = document.createElement("input");
+  checkbox.type = "checkbox";
+  checkbox.id = `group-${index}`;
 
-  const label = document.createElement("label")
-  label.htmlFor = `group-${index}`
-  label.textContent = group.join(" OR ")
+  const label = document.createElement("label");
+  label.htmlFor = `group-${index}`;
+  label.textContent = group.join(" OR ");
 
-  div.appendChild(checkbox)
-  div.appendChild(label)
-  element2.appendChild(div)
+  CheckBoxDiv.appendChild(checkbox);
+  CheckBoxDiv.appendChild(label);
   })
 }
