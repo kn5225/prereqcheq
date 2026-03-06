@@ -25,7 +25,7 @@ function VerMode() {
   element3.addEventListener("click", VerModeAccept);
 }
 
-function VerModeAccept() {
+async function VerModeAccept() {
   const VerInpResult = document.getElementById("VerInput");
   var VerClass = VerInpResult.value;
   const { data, error } = await supabase
