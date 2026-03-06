@@ -23,7 +23,7 @@ function VerMode() {
   checkBoxDiv.id="checkBoxDiv"
   element2.appendChild(input);
   element2.appendChild(button);
-  element2.appendChild(checkBox);
+  element2.appendChild(checkBoxDiv);
   const element3=document.getElementById("VerModeSubmit");
   element3.addEventListener("click", VerModeAccept);
 }
