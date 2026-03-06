@@ -31,6 +31,7 @@ async function VerModeAccept() {
   const { data, error } = await supabase
     .from("prereqlookup")
     .select("*")
+    .eq("COURSE", VerClass)
   console.log(data)
   console.log(error)
   if (error) {
@@ -39,7 +40,9 @@ async function VerModeAccept() {
   }
   const element2 = document.getElementById("MainArea");
   const course = data[0]
-  const prerequisites = course.PREREQS
+  const prerequisites = course.PREREQS.prerequisites
+  console.log(typeof course.PREREQS)
+  console.log(course.PREREQS)
   
 
   prerequisites.forEach((group, index) => {
