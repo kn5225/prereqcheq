@@ -98,3 +98,4 @@ function AdmMode() {
   element3.appendChild(input1);
   element3.appendChild(input2);
   element3.appendChild(button);
+}
