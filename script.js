@@ -7,6 +7,8 @@ const VerifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
 const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
+const AdminMode = document.getElementById("AdminMode");
+AdminMode.addEventListener("click",AdmMode);
 
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
@@ -14,18 +16,20 @@ function VerMode() {
   var input=document.createElement("input");
   input.type = "text";
   input.id="VerInput";
+  input.innerText="Enter course..."
   var button=document.createElement("button");
   button.type="button";
   button.id="VerModeSubmit";
   button.innerText="Submit";
-  const element2 = document.getElementById("MainArea");
+  const element2=document.getElementById("VerModeSubmit");
+  element2.addEventListener("click", VerModeAccept);
+  const element3 = document.getElementById("MainArea");
   const checkBoxDiv = document.createElement("div")
   checkBoxDiv.id="checkBoxDiv"
-  element2.appendChild(input);
-  element2.appendChild(button);
-  element2.appendChild(checkBoxDiv);
-  const element3=document.getElementById("VerModeSubmit");
-  element3.addEventListener("click", VerModeAccept);
+  element3.appendChild(input);
+  element3.appendChild(button);
+  element3.appendChild(checkBoxDiv);
+  
 }
 
 async function VerModeAccept() {
@@ -41,7 +45,7 @@ async function VerModeAccept() {
   console.error(error)
   return
             }
-  const element2 = document.getElementById("MainArea");
+  const element3 = document.getElementById("MainArea");
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
   
@@ -72,3 +76,25 @@ async function VerModeAccept() {
   CheckBoxDiv.appendChild(checkButton)
   CheckBoxDiv.appendChild(result)
 }
+
+function AdmMode() {
+  let OldContent = document.getElementById("MainArea");
+  OldContent.innerHTML = "";
+  var input1=document.createElement("input");
+  input1.type = "email";
+  input1.id="AdmInput";
+  input1.innerText="Enter email...";
+  var input2=document.createElement("input");
+  input2.type = "password";
+  input2.id="VerInput";
+  input2.innerText="Enter password...";
+  var button=document.createElement("button");
+  button.type="button";
+  button.id="AdmModeSubmit";
+  button.innerText="Submit";
+  let AdmSubmit=document.getElementById("AdmModeSubmit");
+  AdmSubmit.addEventListener("click",AdmModeAccept)
+  const element3 = document.getElementById("MainArea");
+  element3.appendChild(input1);
+  element3.appendChild(input2);
+  element3.appendChild(button);
