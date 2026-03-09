@@ -102,6 +102,7 @@ function AdmMode() {
   button.type="button";
   button.id="AdmModeSubmit";
   button.innerText="Submit";
+  const br = document.createElement("br");
   const element2 = document.getElementById("MainArea");
   element2.appendChild(input1);
   element2.appendChild(br);
