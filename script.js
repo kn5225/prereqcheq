@@ -2,7 +2,6 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js"
 
 const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmenNmamNtdHh2Z290enBkYWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0OTA4NDUsImV4cCI6MjA4ODA2Njg0NX0.sZgZzPYVa1iwV1wGH3eS0u9hssoTzZrZPXk7_w11Yc0")
 
-
 const VerifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
 const ReccomMode = document.getElementById("ReccomMode");
@@ -12,6 +11,7 @@ console.log(document.getElementById("AdminMode"))
 const AdminMode = document.getElementById("AdminMode");
 AdminMode.addEventListener("click",AdmMode);
 
+const ButtonHTML=document.getElementById("buttonarea").innerHTML;
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
@@ -88,7 +88,6 @@ function RecMode() {
   
 }
 function AdmMode() {
-  console.log("AdmMode called")
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
   var input1=document.createElement("input");
@@ -105,7 +104,9 @@ function AdmMode() {
   button.innerText="Submit";
   const element2 = document.getElementById("MainArea");
   element2.appendChild(input1);
+  element2.appendChild(br);
   element2.appendChild(input2);
+  element2.appendChild(br);
   element2.appendChild(button);
   const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
@@ -125,6 +126,35 @@ async function AdmModeAccept() {
   AdmModeAdd()
 }
 
-async function AdmModeAdd(){
+function AdmModeAdd(){
+  let OldContent1= document.getElementById("ButtonArea");
+  OldContent1.innerHTML = "";
+  let OldContent2= document.getElementById("MainArea");
+  OldContent2.innerHTML = "";
+  
+  var input3=document.createElement("input");
+  input3.type = "text";
+  input3.id="AdmAddCourse";
+  input3.placeholder="Enter course (Eg. ECE 213)";
+  var input2=document.createElement("input");
+  input2.type = "text";
+  input2.id="AdmAddPrereqs";
+  input2.placeholder="Enter prerequisites (Eg. [['MATH 132','PHYSICS 151'],['CS 187']]";
+  var button=document.createElement("button");
+  button.type="button";
+  button.id="AdmAddSubmit";
+  button.innerText="Submit";
+  const br = document.createElement("br");
+  const element2 = document.getElementById("MainArea");
+  element2.appendChild(input1);
+  element2.appendChild(br);
+  element2.appendChild(input2);
+  element2.appendChild(br);
+  element2.appendChild(button);
+  const AdmAddSubmit=document.getElementById("AdmAddSubmit");
+  AdmAddSubmit.addEventListener("click",AdmAddAccept)
+}
+
+function AdmAddAccept(){
 
 }
