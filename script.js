@@ -1,5 +1,3 @@
-console.log("script loaded")
-
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
 
 const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmenNmamNtdHh2Z290enBkYWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0OTA4NDUsImV4cCI6MjA4ODA2Njg0NX0.sZgZzPYVa1iwV1wGH3eS0u9hssoTzZrZPXk7_w11Yc0")
@@ -86,7 +84,9 @@ function VerModeMet() {
   CheckBoxDiv.appendChild(checkButton)
   CheckBoxDiv.appendChild(result)
 }
-
+function RecMode() {
+  
+}
 function AdmMode() {
   console.log("AdmMode called")
   let OldContent = document.getElementById("MainArea");
@@ -109,4 +109,8 @@ function AdmMode() {
   element2.appendChild(button);
   const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
+}
+
+function AdmModeAccept(){
+
 }
