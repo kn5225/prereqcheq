@@ -168,10 +168,10 @@ function AdmModeAdd(){
 async function AdmAddAccept(){
   const course= document.getElementById("AdmAddCourse").value.trim();
   const prereqraw= document.getElementById("AdmAddPrereqs").value.trim();
-  const result= document.getElementById("AdmAddPrereqs")
-  let prerequisistes
+  const result= document.getElementById("AddResult")
+  let prerequisites
   try {
-    prerequisistes = JSON.parse(prereqraw)
+    prerequisites = JSON.parse(prereqraw)
   }
   catch {
     result.textContent = "❌ Invalid JSON format for prerequisites"
