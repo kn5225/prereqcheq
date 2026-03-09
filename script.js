@@ -11,7 +11,8 @@ console.log(document.getElementById("AdminMode"))
 const AdminMode = document.getElementById("AdminMode");
 AdminMode.addEventListener("click",AdmMode);
 
-const ButtonHTML=document.getElementById("buttonarea").innerHTML;
+const ButtonArea=document.getElementById("buttonarea");
+const ButtonHTML = ButtonArea.innerHTML;
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
