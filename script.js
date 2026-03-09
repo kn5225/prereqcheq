@@ -97,7 +97,7 @@ function AdmMode() {
   input1.placeholder="Enter email...";
   var input2=document.createElement("input");
   input2.type = "password";
-  input2.id="ADMInputPassword";
+  input2.id="AdmInputPassword";
   input2.placeholder="Enter password...";
   var button=document.createElement("button");
   button.type="button";
@@ -111,6 +111,20 @@ function AdmMode() {
   AdmSubmit.addEventListener("click",AdmModeAccept)
 }
 
-function AdmModeAccept(){
+async function AdmModeAccept() {
+  const email = document.getElementById("AdmInputEmail").value
+  const password = document.getElementById("AdmInputPassword").value
+
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+
+  if (error) {
+    console.log("error")
+    return
+  }
+  console.log("Logged in")
+  AdmModeAdd()
+}
+
+async function AdmModeAdd(){
 
 }
