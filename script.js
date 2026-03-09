@@ -84,6 +84,7 @@ function VerModeMet() {
 }
 
 function AdmMode() {
+  console.log("AdmMode called")
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
   var input1=document.createElement("input");
