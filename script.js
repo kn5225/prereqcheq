@@ -6,12 +6,10 @@ const VerifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
 const ReccomMode = document.getElementById("ReccomMode");
 ReccomMode.addEventListener("click",RecMode);
-console.log("adding admin listener")
-console.log(document.getElementById("AdminMode"))
 const AdminMode = document.getElementById("AdminMode");
 AdminMode.addEventListener("click",AdmMode);
 
-const ButtonArea=document.getElementById("buttonarea");
+const ButtonArea=document.getElementById("ButtonArea");
 const ButtonHTML = ButtonArea.innerHTML;
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
