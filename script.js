@@ -22,12 +22,12 @@ function VerMode() {
   button.type="button";
   button.id="VerModeSubmit";
   button.innerText="Submit";
-  const element2 = document.getElementById("MainArea");
+  const MainArea = document.getElementById("MainArea");
   const checkBoxDiv = document.createElement("div")
   checkBoxDiv.id="checkBoxDiv"
-  element2.appendChild(input);
-  element2.appendChild(button);
-  element2.appendChild(checkBoxDiv);
+  MainArea.appendChild(input);
+  MainArea.appendChild(button);
+  MainArea.appendChild(checkBoxDiv);
   const VerSubmit=document.getElementById("VerModeSubmit");
   VerSubmit.addEventListener("click", VerModeAccept);
 }
@@ -46,7 +46,7 @@ async function VerModeAccept() {
   return
   }
   
-  const element2 = document.getElementById("MainArea");
+  const MainArea = document.getElementById("MainArea");
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
   
@@ -101,13 +101,12 @@ function AdmMode() {
   button.type="button";
   button.id="AdmModeSubmit";
   button.innerText="Submit";
-  const br = document.createElement("br");
-  const element2 = document.getElementById("MainArea");
-  element2.appendChild(input1);
-  element2.appendChild(br);
-  element2.appendChild(input2);
-  element2.appendChild(br);
-  element2.appendChild(button);
+  const MainArea = document.getElementById("MainArea");
+  MainArea.appendChild(input1);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(input2);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(button);
   const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
 }
@@ -140,21 +139,60 @@ function AdmModeAdd(){
   input4.type = "text";
   input4.id="AdmAddPrereqs";
   input4.placeholder="Enter prerequisites (Eg. [['MATH 132','PHYSICS 151'],['CS 187']]";
-  var button=document.createElement("button");
-  button.type="button";
-  button.id="AdmAddSubmit";
-  button.innerText="Submit";
-  const br = document.createElement("br");
-  const element2 = document.getElementById("MainArea");
-  element2.appendChild(input3);
-  element2.appendChild(br);
-  element2.appendChild(input4);
-  element2.appendChild(br);
-  element2.appendChild(button);
-  const AdmAddSubmit=document.getElementById("AdmAddSubmit");
-  AdmAddSubmit.addEventListener("click",AdmAddAccept)
+  var button1=document.createElement("button");
+  button1.type="button";
+  button1.id="AdmModeAdd";
+  button1.innerText="Submit";
+  var result=document.createElement("p");
+  result.id="AddResult"
+  var button2=document.createElement("button");
+  button2.type="button";
+  button2.id="AdmModeLogout";
+  button2.innerText="Log out";
+  const MainArea = document.getElementById("MainArea");
+  MainArea.appendChild(input3);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(input4);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(button1);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(result);
+  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(button2);
+  const AdmModeAdd=document.getElementById("AdmModeAdd");
+  AdmModeAdd.addEventListener("click",AdmAddAccept)
+  const AdmModeLogout=document.getElementById("AdmModeLogout");
+  AdmModeLogout.addEventListener("click",AdmLogout)
 }
 
-function AdmAddAccept(){
+async function AdmAddAccept(){
+  const course= document.getElementById("AdmAddCourse").value.trim();
+  const prereqraw= document.getElementById("AdmAddPrereqs").value.trim();
+  const result= document.getElementById("AdmAddPrereqs")
+  let prerequisistes
+  try {
+    prerequisistes = JSON.parse(prereqraw)
+  }
+  catch {
+    result.textContent = "❌ Invalid JSON format for prerequisites"
+    return
+  }
+  const {error} = await supabase
+    .from("prereqlookup")
+    .insert({ COURSE: course, PREREQS: {prerequisistes}})
 
+  if (error){
+    result.textContent = error ? "❌ Error adding course"
+    return
+      }
+  result.textContent = "Course Added!"
+    
+}
+async function AdmLogout(){
+  await supabase.auth.signOut();
+  let MainArea = document.getElementById("MainArea");
+  MainArea.innerHTML = "<p>Logged out.</p>";
+  let ButtonArea=document.getElementById("ButtonArea");
+  ButtonArea.innerHTML=ButtonHTML;
+  
 }
