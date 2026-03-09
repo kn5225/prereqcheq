@@ -21,15 +21,14 @@ function VerMode() {
   button.type="button";
   button.id="VerModeSubmit";
   button.innerText="Submit";
-  const element2=document.getElementById("VerModeSubmit");
-  element2.addEventListener("click", VerModeAccept);
-  const element3 = document.getElementById("MainArea");
+  const element2 = document.getElementById("MainArea");
   const checkBoxDiv = document.createElement("div")
   checkBoxDiv.id="checkBoxDiv"
-  element3.appendChild(input);
-  element3.appendChild(button);
-  element3.appendChild(checkBoxDiv);
-  
+  element2.appendChild(input);
+  element2.appendChild(button);
+  element2.appendChild(checkBoxDiv);
+  const VerSubmit=document.getElementById("VerModeSubmit");
+  VerSubmit.addEventListener("click", VerModeAccept);
 }
 
 async function VerModeAccept() {
@@ -45,7 +44,7 @@ async function VerModeAccept() {
   console.error(error)
   return
             }
-  const element3 = document.getElementById("MainArea");
+  const element2 = document.getElementById("MainArea");
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
   
@@ -92,10 +91,10 @@ function AdmMode() {
   button.type="button";
   button.id="AdmModeSubmit";
   button.innerText="Submit";
-  let AdmSubmit=document.getElementById("AdmModeSubmit");
+  const element2 = document.getElementById("MainArea");
+  element2.appendChild(input1);
+  element2.appendChild(input2);
+  element2.appendChild(button);
+  const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
-  const element3 = document.getElementById("MainArea");
-  element3.appendChild(input1);
-  element3.appendChild(input2);
-  element3.appendChild(button);
 }
