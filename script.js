@@ -132,6 +132,7 @@ async function AdmModeAccept() {
     const errorP = document.createElement("p");
     errorP.textContent = "Invalid credentials"
     document.getElementById("MainArea").appendChild(errorP);
+    return
   }
   console.log("Logged in")
   AdmModeAdd()
