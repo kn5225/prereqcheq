@@ -5,3 +5,7 @@
 }
 #ReccomMode{}
 #MainArea{}
+input{
+  field-sizing: content;
+  min-width: 100px;
+} 
