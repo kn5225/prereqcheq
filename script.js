@@ -179,10 +179,10 @@ async function AdmAddAccept(){
   }
   const {error} = await supabase
     .from("prereqlookup")
-    .insert({ COURSE: course, PREREQS: {prerequisistes}})
+    .insert({ COURSE: course, PREREQS: {prerequisites}})
 
   if (error){
-    result.textContent = error ? "❌ Error adding course"
+    result.textContent = "❌ Error adding course"
     return
       }
   result.textContent = "Course Added!"
