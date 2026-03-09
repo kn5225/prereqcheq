@@ -11,6 +11,12 @@ AdminMode.addEventListener("click",AdmMode);
 
 const ButtonArea=document.getElementById("ButtonArea");
 const ButtonHTML = ButtonArea.innerHTML;
+
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
@@ -47,6 +53,10 @@ async function VerModeAccept() {
   }
   
   const MainArea = document.getElementById("MainArea");
+  if (!data || data.length === 0) {
+    const CheckBoxDiv = document.getElementById("checkBoxDiv")
+    CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
+  }
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
   
@@ -118,8 +128,10 @@ async function AdmModeAccept() {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    console.log("error")
-    return
+    console.log("error");
+    const errorP = document.createElement("p");
+    errorP.textContent = "Invalid credentials"
+    document.getElementById("MainArea").appendChild(errorP);
   }
   console.log("Logged in")
   AdmModeAdd()
@@ -138,7 +150,7 @@ function AdmModeAdd(){
   var input4=document.createElement("input");
   input4.type = "text";
   input4.id="AdmAddPrereqs";
-  input4.placeholder="Enter prerequisites (Eg. [['MATH 132','PHYSICS 151'],['CS 187']]";
+  input4.placeholder='Enter prerequisites (Eg. [["MATH 132","PHYSICS 151"],["CS 187"]]';
   var button1=document.createElement("button");
   button1.type="button";
   button1.id="AdmModeAdd";
@@ -159,8 +171,8 @@ function AdmModeAdd(){
   MainArea.appendChild(result);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button2);
-  const AdmModeAdd=document.getElementById("AdmModeAdd");
-  AdmModeAdd.addEventListener("click",AdmAddAccept)
+  const AdmModeSubmit=document.getElementById("AdmModeAdd");
+  AdmModeSubmit.addEventListener("click",AdmAddAccept)
   const AdmModeLogout=document.getElementById("AdmModeLogout");
   AdmModeLogout.addEventListener("click",AdmLogout)
 }
@@ -169,12 +181,16 @@ async function AdmAddAccept(){
   const course= document.getElementById("AdmAddCourse").value.trim();
   const prereqraw= document.getElementById("AdmAddPrereqs").value.trim();
   const result= document.getElementById("AddResult")
+  if (!course) {
+    result.textContent = "❌ Course name cannot be empty"
+    return
+  }
   let prerequisites
   try {
     prerequisites = JSON.parse(prereqraw)
   }
   catch {
-    result.textContent = "❌ Invalid JSON format for prerequisites"
+    result.textContent = "Invalid JSON format for prerequisites"
     return
   }
   const {error} = await supabase
@@ -182,7 +198,7 @@ async function AdmAddAccept(){
     .insert({ COURSE: course, PREREQS: {prerequisites}})
 
   if (error){
-    result.textContent = "❌ Error adding course"
+    result.textContent = "Error adding course"
     return
       }
   result.textContent = "Course Added!"
@@ -194,5 +210,8 @@ async function AdmLogout(){
   MainArea.innerHTML = "<p>Logged out.</p>";
   let ButtonArea=document.getElementById("ButtonArea");
   ButtonArea.innerHTML=ButtonHTML;
+  document.getElementById("VerifMode").addEventListener("click", VerMode)
+  document.getElementById("ReccomMode").addEventListener("click", RecMode)
+  document.getElementById("AdminMode").addEventListener("click", AdmMode)
   
 }
