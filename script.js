@@ -16,7 +16,7 @@ function VerMode() {
   var input=document.createElement("input");
   input.type = "text";
   input.id="VerInput";
-  input.innerText="Enter course..."
+  input.placeholder="Enter course..."
   var button=document.createElement("button");
   button.type="button";
   button.id="VerModeSubmit";
@@ -43,7 +43,8 @@ async function VerModeAccept() {
   if (error) {
   console.error(error)
   return
-            }
+  }
+  
   const element2 = document.getElementById("MainArea");
   const course = data[0];
   const prerequisites = course.PREREQS.prerequisites;
@@ -61,16 +62,22 @@ async function VerModeAccept() {
   CheckBoxDiv.appendChild(checkbox);
   CheckBoxDiv.appendChild(label);
   CheckBoxDiv.appendChild(br); 
-  })
+          })
+
+  VerModeMet()
+}
+
+function VerModeMet() {
   const checkButton = document.createElement("button")
   checkButton.textContent = "Check Prerequisites"
-  checkButton.addEventListener("click", () => {
-  const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
-  const allMet = [...checkboxes].every(cb => cb.checked)
-  result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
-  })
   const result = document.createElement("p")
   result.id = "prereqResult"
+  checkButton.addEventListener("click", () => {
+    const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
+    const allMet = [...checkboxes].every(cb => cb.checked)
+    result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
+  })
+  
   const CheckBoxDiv = document.getElementById("checkBoxDiv");
   CheckBoxDiv.appendChild(checkButton)
   CheckBoxDiv.appendChild(result)
@@ -81,12 +88,12 @@ function AdmMode() {
   OldContent.innerHTML = "";
   var input1=document.createElement("input");
   input1.type = "email";
-  input1.id="AdmInput";
-  input1.innerText="Enter email...";
+  input1.id="AdmInputEmail";
+  input1.placeholder="Enter email...";
   var input2=document.createElement("input");
   input2.type = "password";
-  input2.id="VerInput";
-  input2.innerText="Enter password...";
+  input2.id="ADMInputPassword";
+  input2.placeholder="Enter password...";
   var button=document.createElement("button");
   button.type="button";
   button.id="AdmModeSubmit";
