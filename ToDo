@@ -2,3 +2,4 @@ Write function to accept added courses and send query
 Create logout button which shows buttons appearing
 Add options to delete or update table
 Work on styling, increase font sizes and add headers, make buttons interesting
+Make sure course entry is in terms of AND, OR, () , and then parse it at a later step instead of writing in JSON directly
