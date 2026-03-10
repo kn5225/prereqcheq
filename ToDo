@@ -2,4 +2,5 @@ Add options to delete records or update table
 Create UI template for site
 Work on styling, increase font sizes and add headers, make buttons interesting
 Make sure course entry is in terms of AND, OR, () , and then parse it at a later step instead of writing in JSON directly
+Figure out case of ECE 201
 Create AHK script to automate adding courses
