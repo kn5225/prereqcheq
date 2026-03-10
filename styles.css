@@ -3,7 +3,7 @@
 #VerifMode{}
 #ReccomMode{}
 #MainArea{}
-input{
+#VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs {
   field-sizing: content;
   min-width: 100px;
 } 
