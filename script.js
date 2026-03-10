@@ -65,14 +65,13 @@ async function VerModeAccept() {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = `group-${index}`;
-
   const label = document.createElement("label");
   label.htmlFor = `group-${index}`;
   label.textContent = group.join(" OR ");
-  const br = document.createElement("br");
-  CheckBoxDiv.appendChild(checkbox);
-  CheckBoxDiv.appendChild(label);
-  CheckBoxDiv.appendChild(br); 
+  const row = document.createElement("div")
+  row.appendChild(checkbox)
+  row.appendChild(label)
+  CheckBoxDiv.appendChild(row) 
           })
 
   VerModeMet()
