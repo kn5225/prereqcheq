@@ -1,6 +1,6 @@
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
 
-const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImRmenNmamNtdHh2Z290enBkYWd5Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzI0OTA4NDUsImV4cCI6MjA4ODA2Njg0NX0.sZgZzPYVa1iwV1wGH3eS0u9hssoTzZrZPXk7_w11Yc0")
+const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "sb_publishable_YWYDtyLqRbevoyWsd5i_jQ_vnvqaRBf")
 
 const VerifMode = document.getElementById("VerifMode");
 VerifMode.addEventListener("click",VerMode);
