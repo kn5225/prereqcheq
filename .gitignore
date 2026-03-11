@@ -1,0 +1,12 @@
+# Environment/config files
+config.js
+.env
+.env.local
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor folders
+.vscode/
+.idea/
