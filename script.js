@@ -1,4 +1,7 @@
+import { SUPABASE_URL, SUPABASE_KEY } from "./config.js"
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
+
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 
 const supabase = createClient("https://dfzsfjcmtxvgotzpdagy.supabase.co", "sb_publishable_YWYDtyLqRbevoyWsd5i_jQ_vnvqaRBf")
 
