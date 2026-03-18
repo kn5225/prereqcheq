@@ -7,7 +7,7 @@ h2{
 }
 #buttonarea{}
 #VerifMode, #ReccomMode, #MainArea{
-  background-color: #000000;
+  background-color: #ffffff;
 }
 #VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs {
   field-sizing: content;
