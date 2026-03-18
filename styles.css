@@ -11,5 +11,6 @@ h2{
 }
 #VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs {
   field-sizing: content;
+  background-color: #ffffff;
   min-width: 100px;
 } 
