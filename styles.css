@@ -6,7 +6,7 @@ h2{
   background-color: #881c1c;
 }
 #buttonarea{}
-#VerifMode, #ReccomMode, #MainArea{
+#VerifMode, #ReccomMode, #AdmMode{
   background-color: #ffffff;
 }
 #VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs {
