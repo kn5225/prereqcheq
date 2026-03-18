@@ -1,8 +1,14 @@
 #title{}
+body{
+  background-color: #a2aaad;
+}
+h2{
+  background-color: #881c1c;
+}
 #buttonarea{}
-#VerifMode{}
-#ReccomMode{}
-#MainArea{}
+#VerifMode, #ReccomMode, #MainArea{
+  background-color: #000000;
+}
 #VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs {
   field-sizing: content;
   min-width: 100px;
