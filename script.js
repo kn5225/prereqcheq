@@ -70,11 +70,11 @@ async function VerModeAccept(courseOverride = null) {
   let CheckBoxDiv = document.getElementById("checkBoxDiv");
   CheckBoxDiv.innerHTML = "";
 
-  if (courseHisty.length > 0) {
+  if (courseHistory.length > 0) {
     const backBtn = document.createElement("button")
     backBtn.textContent = "← Back"
     backBtn.addEventListener("click", () => {
-      const prev = courseHisty.pop()
+      const prev = courseHistory.pop()
       VerModeAccept(prev)
     })
     CheckBoxDiv.appendChild(backBtn)
