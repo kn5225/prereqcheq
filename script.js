@@ -30,7 +30,7 @@ function sanitize(input) {
 
 function isValidPrereqs(input) {
   if (input.length > 500) return false
-  const parsed = parsePrereqString(prereqraw)
+  const parsed = parsePrereqString(input)
   if (parsed.length > 10 || parsed.some(group => group.length > 5)) return false
   return true
 }
@@ -53,7 +53,7 @@ function VerMode() {
   MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
   const VerSubmit=document.getElementById("VerModeSubmit");
-  VerSubmit.addEventListener("click", VerModeAccept);
+  VerSubmit.addEventListener("click", () => VerModeAccept());
 }
 
 async function VerModeAccept(courseOverride = null) {
@@ -85,7 +85,7 @@ async function VerModeAccept(courseOverride = null) {
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
-  if (err) { console.err(err); return }
+  if (error) { console.error(error); return }
   if (!data || data.length === 0) {
     CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
     return
@@ -97,20 +97,20 @@ async function VerModeAccept(courseOverride = null) {
   }
   const prerequisites = course.PREREQS;
   
-  prerequisites.fEach((group, index) => {
+  prerequisites.forEach((group, index) => {
   const CheckBoxDiv = document.getElementById("checkBoxDiv");
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = `group-${index}`;
   const label = document.createElement("label");
-  label.htmlF = `group-${index}`;
+  label.htmlFor = `group-${index}`;
   label.textContent = group.join("  ");
-  group.fEach((c, i) => {
+  group.forEach((c, i) => {
       const span = document.createElement("span")
       span.textContent = c
-      span.style.curs = "pointer"
-      span.style.textDecation = "underline"
-      span.style.col = "#881c3c"
+      span.style.cursor = "pointer"
+      span.style.textDecoration = "underline"
+      span.style.color = "#881c3c"
       span.addEventListener("click", (e) => {
         e.preventDefault()
         VerModeAccept(c)
@@ -118,7 +118,7 @@ async function VerModeAccept(courseOverride = null) {
       label.appendChild(span)
 
       if (i < group.length - 1) {
-        label.appendChild(document.createTextNode("  "))
+        label.appendChild(document.createTextNode(" OR "))
       }
     })
   const row = document.createElement("div")
@@ -136,7 +136,7 @@ function VerModeMet() {
   const result = document.createElement("p")
   result.id = "prereqResult"
   checkButton.addEventListener("click", () => {
-    const checkboxes = document.querySelectAll("#checkBoxDiv input[type='checkbox']")
+    const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
     const allMet = [...checkboxes].every(cb => cb.checked)
     result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
   })
@@ -156,8 +156,8 @@ function AdmMode() {
   input1.id="AdmInputEmail";
   input1.placeholder="Enter email...";
   var input2=document.createElement("input");
-  input2.type = "passwd";
-  input2.id="AdmInputPasswd";
+  input2.type = "password";
+  input2.id="AdmInputPassword";
   input2.placeholder="Enter passwd...";
   var button=document.createElement("button");
   button.type="button";
@@ -178,9 +178,9 @@ function AdmMode() {
 
 async function AdmModeAccept() {
   const email = document.getElementById("AdmInputEmail").value
-  const passwd = document.getElementById("AdmInputPasswd").value
+  const password = document.getElementById("AdmInputPasswd").value
 
-  const { data, err } = await supabase.auth.signInWithPasswd({ email, passwd })
+  const { data, err } = await supabase.auth.signInWithPassword({ email, password })
 
   if (err) {
     document.getElementById("loginErr").textContent = "Invalid credentials!";
@@ -253,12 +253,13 @@ async function AdmAddAccept(){
   if (!isValidPrereqs(prereqraw)) {
   result.textContent = "❌ Prerequisites too complex or too long"
   return
-}
+  }
+  
+  let prerequisites
   if (!prereqraw || prereqraw === 'None') {
   prerequisites = []
   return
-} 
-  let prerequisites
+  } 
   try {
     prerequisites = parsePrereqString(prereqraw)
   }
