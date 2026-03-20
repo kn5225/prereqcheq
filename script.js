@@ -116,12 +116,15 @@ function AdmMode() {
   button.type="button";
   button.id="AdmModeSubmit";
   button.innerText="Submit";
+  const errorP = document.createElement("p");
+  errorP.id="loginError"
   const MainArea = document.getElementById("MainArea");
   MainArea.appendChild(input1);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(input2);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button);
+  MainArea.appendChild(errorP);
   const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
 }
@@ -133,10 +136,7 @@ async function AdmModeAccept() {
   const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
   if (error) {
-    console.log("error");
-    const errorP = document.createElement("p");
-    errorP.textContent = "Invalid credentials"
-    document.getElementById("MainArea").appendChild(errorP);
+    document.getElementById("loginError").textContent = "Invalid credentials!";
     return
   }
   console.log("Logged in")
