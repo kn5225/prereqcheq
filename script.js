@@ -13,6 +13,8 @@ AdminMode.addEventListener("click",AdmMode);
 const ButtonArea=document.getElementById("ButtonArea");
 const ButtonHTML = ButtonArea.innerHTML;
 
+let courseHistory = []
+
 function parsePrereqString(input) {
   input = input.trim()
   const andGroups = input.split(/\s+AND\s+/)
@@ -21,6 +23,16 @@ function parsePrereqString(input) {
     return group.split(/\s+OR\s+/).map(course => course.trim())
   })
   return result
+}
+function sanitize(input) {
+  return input.trim().toUpperCase()
+}
+
+function isValidPrereqs(input) {
+  if (input.length > 500) return false
+  const parsed = parsePrereqString(prereqraw)
+  if (parsed.length > 10 || parsed.some(group => group.length > 5)) return false
+  return true
 }
 
 function VerMode() {
@@ -44,28 +56,42 @@ function VerMode() {
   VerSubmit.addEventListener("click", VerModeAccept);
 }
 
-async function VerModeAccept() {
-  const VerInpResult = document.getElementById("VerInput");
-  var VerClass = VerInpResult.value;
-  let OldContent = document.getElementById("checkBoxDiv");
-  OldContent.innerHTML = "";
+async function VerModeAccept(courseOverride = null) {
+  const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
+  if (courseOverride) {
+    const previous = document.getElementById("VerInput").value;
+    courseHistory.push(previous);
+    document.getElementById("VerInput").value = courseOverride;
+  } 
+  else {
+    courseHistory = []
+  }
+  
+  let CheckBoxDiv = document.getElementById("checkBoxDiv");
+  CheckBoxDiv.innerHTML = "";
+
+  if (courseHistory.length > 0) {
+    const backBtn = document.createElement("button")
+    backBtn.textContent = "← Back"
+    backBtn.addEventListener("click", () => {
+      const prev = courseHistory.pop()
+      VerModeAccept(prev)
+    })
+    CheckBoxDiv.appendChild(backBtn)
+    CheckBoxDiv.appendChild(document.createElement("br"))
+  }
+  
   const { data, error } = await supabase
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
-  if (error) {
-  console.error(error)
-  return
-  }
-  
-  const MainArea = document.getElementById("MainArea");
+  if (error) { console.error(error); return }
   if (!data || data.length === 0) {
-    const CheckBoxDiv = document.getElementById("checkBoxDiv")
     CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
+    return
   }
   const course = data[0];
   if (course.PREREQS.length === 0) {
-    const CheckBoxDiv = document.getElementById("checkBoxDiv")
     CheckBoxDiv.innerHTML = "<p>No prerequisites for this course.</p>"
     return
   }
@@ -79,6 +105,22 @@ async function VerModeAccept() {
   const label = document.createElement("label");
   label.htmlFor = `group-${index}`;
   label.textContent = group.join(" OR ");
+  group.forEach((c, i) => {
+      const span = document.createElement("span")
+      span.textContent = c
+      span.style.cursor = "pointer"
+      span.style.textDecoration = "underline"
+      span.style.color = "#881c3c"
+      span.addEventListener("click", (e) => {
+        e.preventDefault()
+        VerModeAccept(c)
+      })
+      label.appendChild(span)
+
+      if (i < group.length - 1) {
+        label.appendChild(document.createTextNode(" OR "))
+      }
+    })
   const row = document.createElement("div")
   row.appendChild(checkbox)
   row.appendChild(label)
@@ -201,13 +243,18 @@ function AdmModeAdd(){
 }
 
 async function AdmAddAccept(){
-  const course= document.getElementById("AdmAddCourse").value.trim();
-  const prereqraw= document.getElementById("AdmAddPrereqs").value.trim();
+  const course= sanitize(document.getElementById("AdmAddCourse").value);
+  const prereqraw= sanitize(document.getElementById("AdmAddPrereqs").value.trim());
   const result= document.getElementById("AddResult")
   if (!course) {
     result.textContent = "❌ Course name cannot be empty"
     return
-  if (!prereqraw) {
+  }
+  if (!isValidPrereqs(prereqraw)) {
+  result.textContent = "❌ Prerequisites too complex or too long"
+  return
+}
+  if (!prereqraw or prereqraw === 'None') {
   prerequisites = []
   return
 } 
