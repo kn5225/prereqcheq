@@ -157,7 +157,7 @@ function AdmModeAdd(){
   var input4=document.createElement("input");
   input4.type = "text";
   input4.id="AdmAddPrereqs";
-  input4.placeholder='Enter prerequisites (Eg. [["MATH 132","PHYSICS 151"],["CS 187"]]';
+  input4.placeholder='Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187")';
   var button1=document.createElement("button");
   button1.type="button";
   button1.id="AdmModeAdd";
