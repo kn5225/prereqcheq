@@ -60,11 +60,11 @@ async function VerModeAccept(courseOverride = null) {
   const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
   if (courseOverride) {
     const previous = document.getElementById("VerInput").value;
-    courseHisty.push(previous);
+    courseHistory.push(previous);
     document.getElementById("VerInput").value = courseOverride;
   } 
   else {
-    courseHisty = []
+    courseHistory = []
   }
   
   let CheckBoxDiv = document.getElementById("checkBoxDiv");
