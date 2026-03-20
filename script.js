@@ -104,7 +104,7 @@ async function VerModeAccept(courseOverride = null) {
   checkbox.id = `group-${index}`;
   const label = document.createElement("label");
   label.htmlFor = `group-${index}`;
-  label.textContent = group.join("  ");
+  label.textContent = group.join(" OR ");
   group.forEach((c, i) => {
       const span = document.createElement("span")
       span.textContent = c
@@ -158,7 +158,7 @@ function AdmMode() {
   var input2=document.createElement("input");
   input2.type = "password";
   input2.id="AdmInputPassword";
-  input2.placeholder="Enter passwd...";
+  input2.placeholder="Enter password...";
   var button=document.createElement("button");
   button.type="button";
   button.id="AdmModeSubmit";
@@ -178,11 +178,11 @@ function AdmMode() {
 
 async function AdmModeAccept() {
   const email = document.getElementById("AdmInputEmail").value
-  const password = document.getElementById("AdmInputPasswd").value
+  const password = document.getElementById("AdmInputPassword").value
 
-  const { data, err } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
 
-  if (err) {
+  if (error) {
     document.getElementById("loginErr").textContent = "Invalid credentials!";
     return
   }
@@ -258,7 +258,6 @@ async function AdmAddAccept(){
   let prerequisites
   if (!prereqraw || prereqraw === 'None') {
   prerequisites = []
-  return
   } 
   try {
     prerequisites = parsePrereqString(prereqraw)
