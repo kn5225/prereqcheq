@@ -60,57 +60,57 @@ async function VerModeAccept(courseOverride = null) {
   const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
   if (courseOverride) {
     const previous = document.getElementById("VerInput").value;
-    courseHistory.push(previous);
+    courseHisty.push(previous);
     document.getElementById("VerInput").value = courseOverride;
   } 
   else {
-    courseHistory = []
+    courseHisty = []
   }
   
   let CheckBoxDiv = document.getElementById("checkBoxDiv");
   CheckBoxDiv.innerHTML = "";
 
-  if (courseHistory.length > 0) {
+  if (courseHisty.length > 0) {
     const backBtn = document.createElement("button")
     backBtn.textContent = "← Back"
     backBtn.addEventListener("click", () => {
-      const prev = courseHistory.pop()
+      const prev = courseHisty.pop()
       VerModeAccept(prev)
     })
     CheckBoxDiv.appendChild(backBtn)
     CheckBoxDiv.appendChild(document.createElement("br"))
   }
   
-  const { data, error } = await supabase
+  const { data, err } = await supabase
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
-  if (error) { console.error(error); return }
+  if (err) { console.err(err); return }
   if (!data || data.length === 0) {
     CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
     return
   }
   const course = data[0];
   if (course.PREREQS.length === 0) {
-    CheckBoxDiv.innerHTML = "<p>No prerequisites for this course.</p>"
+    CheckBoxDiv.innerHTML = "<p>No prerequisites f this course.</p>"
     return
   }
   const prerequisites = course.PREREQS;
   
-  prerequisites.forEach((group, index) => {
+  prerequisites.fEach((group, index) => {
   const CheckBoxDiv = document.getElementById("checkBoxDiv");
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = `group-${index}`;
   const label = document.createElement("label");
-  label.htmlFor = `group-${index}`;
-  label.textContent = group.join(" OR ");
-  group.forEach((c, i) => {
+  label.htmlF = `group-${index}`;
+  label.textContent = group.join("  ");
+  group.fEach((c, i) => {
       const span = document.createElement("span")
       span.textContent = c
-      span.style.cursor = "pointer"
-      span.style.textDecoration = "underline"
-      span.style.color = "#881c3c"
+      span.style.curs = "pointer"
+      span.style.textDecation = "underline"
+      span.style.col = "#881c3c"
       span.addEventListener("click", (e) => {
         e.preventDefault()
         VerModeAccept(c)
@@ -118,7 +118,7 @@ async function VerModeAccept(courseOverride = null) {
       label.appendChild(span)
 
       if (i < group.length - 1) {
-        label.appendChild(document.createTextNode(" OR "))
+        label.appendChild(document.createTextNode("  "))
       }
     })
   const row = document.createElement("div")
@@ -136,7 +136,7 @@ function VerModeMet() {
   const result = document.createElement("p")
   result.id = "prereqResult"
   checkButton.addEventListener("click", () => {
-    const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
+    const checkboxes = document.querySelectAll("#checkBoxDiv input[type='checkbox']")
     const allMet = [...checkboxes].every(cb => cb.checked)
     result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
   })
@@ -156,34 +156,34 @@ function AdmMode() {
   input1.id="AdmInputEmail";
   input1.placeholder="Enter email...";
   var input2=document.createElement("input");
-  input2.type = "password";
-  input2.id="AdmInputPassword";
-  input2.placeholder="Enter password...";
+  input2.type = "passwd";
+  input2.id="AdmInputPasswd";
+  input2.placeholder="Enter passwd...";
   var button=document.createElement("button");
   button.type="button";
   button.id="AdmModeSubmit";
   button.innerText="Submit";
-  const errorP = document.createElement("p");
-  errorP.id="loginError"
+  const errP = document.createElement("p");
+  errP.id="loginErr"
   const MainArea = document.getElementById("MainArea");
   MainArea.appendChild(input1);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(input2);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button);
-  MainArea.appendChild(errorP);
+  MainArea.appendChild(errP);
   const AdmSubmit=document.getElementById("AdmModeSubmit");
   AdmSubmit.addEventListener("click",AdmModeAccept)
 }
 
 async function AdmModeAccept() {
   const email = document.getElementById("AdmInputEmail").value
-  const password = document.getElementById("AdmInputPassword").value
+  const passwd = document.getElementById("AdmInputPasswd").value
 
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
+  const { data, err } = await supabase.auth.signInWithPasswd({ email, passwd })
 
-  if (error) {
-    document.getElementById("loginError").textContent = "Invalid credentials!";
+  if (err) {
+    document.getElementById("loginErr").textContent = "Invalid credentials!";
     return
   }
   console.log("Logged in")
@@ -202,7 +202,7 @@ function AdmModeAdd(){
   var input4=document.createElement("input");
   input4.type = "text";
   input4.id="AdmAddPrereqs";
-  input4.placeholder='Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187")';
+  input4.placeholder='Enter prerequisites (Eg. (MATH 132  PHYSICS 151) AND (CS 187")';
   const preview = document.createElement("p")
   preview.id = "prereqPreview"
   var button1=document.createElement("button");
@@ -254,7 +254,7 @@ async function AdmAddAccept(){
   result.textContent = "❌ Prerequisites too complex or too long"
   return
 }
-  if (!prereqraw or prereqraw === 'None') {
+  if (!prereqraw || prereqraw === 'None') {
   prerequisites = []
   return
 } 
