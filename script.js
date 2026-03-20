@@ -13,8 +13,14 @@ AdminMode.addEventListener("click",AdmMode);
 const ButtonArea=document.getElementById("ButtonArea");
 const ButtonHTML = ButtonArea.innerHTML;
 
-function sleep(ms) {
-  return new Promise(resolve => setTimeout(resolve, ms));
+function parsePrereqString(input) {
+  input = input.trim()
+  const andGroups = input.split(/\s+AND\s+/)
+  const result = andGroups.map(group => {
+    group = group.replace(/[()]/g, "").trim()
+    return group.split(/\s+OR\s+/).map(course => course.trim())
+  })
+  return result
 }
 
 
@@ -188,10 +194,11 @@ async function AdmAddAccept(){
   }
   let prerequisites
   try {
-    prerequisites = JSON.parse(prereqraw)
+    prerequisites = parsePrereqString(prereqraw)
+    if (prerequisites.length === 0) throw new Error()
   }
   catch {
-    result.textContent = "Invalid JSON format for prerequisites"
+    result.textContent = "Invalid format for prerequisites"
     return
   }
   const {error} = await supabase
