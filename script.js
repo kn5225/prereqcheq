@@ -89,12 +89,16 @@ async function VerModeAccept(courseOverride = null) {
     .eq("COURSE", VerClass)
   if (error) { console.error(error); return }
   if (!data || data.length === 0) {
-    CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
+    const p = document.createElement("p")
+    p.textContent = "Course not found."
+    CheckBoxDiv.appendChild(p)
     return
   }
   const course = data[0];
   if (course.PREREQS.length === 0) {
-    CheckBoxDiv.innerHTML = "<p>No prerequisites for this course.</p>"
+    const p = document.createElement("p")
+    p.textContent = "No prerequisites for this course."
+    CheckBoxDiv.appendChild(p)
     return
   }
   const prerequisites = course.PREREQS;
