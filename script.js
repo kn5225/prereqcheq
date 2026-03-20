@@ -158,8 +158,6 @@ function AdmModeAdd(){
   input4.placeholder='Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187")';
   const preview = document.createElement("p")
   preview.id = "prereqPreview"
-  preview.style.fontSize = "12px"
-  preview.style.color = "gray"
   var button1=document.createElement("button");
   button1.type="button";
   button1.id="AdmModeAdd";
