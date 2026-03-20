@@ -23,15 +23,6 @@ function parsePrereqString(input) {
   return result
 }
 
-document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
-  try {
-    const parsed = parsePrereqString(e.target.value)
-    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
-  } catch {
-    document.getElementById("prereqPreview").textContent = "Invalid format"
-  }
-})
-
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
   OldContent.innerHTML = "";
