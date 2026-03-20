@@ -64,6 +64,11 @@ async function VerModeAccept() {
     CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
   }
   const course = data[0];
+  if (!course.PREREQS || course.PREREQS.length === 0) {
+    const CheckBoxDiv = document.getElementById("checkBoxDiv")
+    CheckBoxDiv.innerHTML = "<p>No prerequisites for this course.</p>"
+    return
+  }
   const prerequisites = course.PREREQS;
   
   prerequisites.forEach((group, index) => {
