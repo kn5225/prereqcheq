@@ -81,7 +81,7 @@ async function VerModeAccept(courseOverride = null) {
     CheckBoxDiv.appendChild(document.createElement("br"))
   }
   
-  const { data, err } = await supabase
+  const { data, error } = await supabase
     .from("prereqlookup")
     .select("*")
     .eq("COURSE", VerClass)
