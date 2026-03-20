@@ -148,7 +148,6 @@ function AdmModeAdd(){
   OldContent1.innerHTML = "";
   let OldContent2= document.getElementById("MainArea");
   OldContent2.innerHTML = "";
-  
   var input3=document.createElement("input");
   input3.type = "text";
   input3.id="AdmAddCourse";
@@ -161,16 +160,6 @@ function AdmModeAdd(){
   preview.id = "prereqPreview"
   preview.style.fontSize = "12px"
   preview.style.color = "gray"
-  MainArea.appendChild(preview)
-  document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
-  try {
-    const parsed = parsePrereqString(e.target.value)
-    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
-  } 
-  catch {
-    document.getElementById("prereqPreview").textContent = "Invalid format"
-  }
-  })
   var button1=document.createElement("button");
   button1.type="button";
   button1.id="AdmModeAdd";
@@ -185,12 +174,23 @@ function AdmModeAdd(){
   MainArea.appendChild(input3);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(input4);
+  MainArea.appendChild(preview)
+  document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
+  try {
+    const parsed = parsePrereqString(e.target.value)
+    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
+  } 
+  catch {
+    document.getElementById("prereqPreview").textContent = "Invalid format"
+  }
+  })
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button1);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(result);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button2);
+  
   const AdmModeSubmit=document.getElementById("AdmModeAdd");
   AdmModeSubmit.addEventListener("click",AdmAddAccept)
   const AdmModeLogout=document.getElementById("AdmModeLogout");
