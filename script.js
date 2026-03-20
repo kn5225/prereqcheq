@@ -23,6 +23,14 @@ function parsePrereqString(input) {
   return result
 }
 
+document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
+  try {
+    const parsed = parsePrereqString(e.target.value)
+    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
+  } catch {
+    document.getElementById("prereqPreview").textContent = "Invalid format"
+  }
+})
 
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
@@ -188,6 +196,19 @@ async function AdmAddAccept(){
   const course= document.getElementById("AdmAddCourse").value.trim();
   const prereqraw= document.getElementById("AdmAddPrereqs").value.trim();
   const result= document.getElementById("AddResult")
+  const preview = document.createElement("p")
+  preview.id = "prereqPreview"
+  preview.style.fontSize = "12px"
+  preview.style.color = "gray"
+  MainArea.appendChild(preview)
+  document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
+  try {
+    const parsed = parsePrereqString(e.target.value)
+    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
+  } catch {
+    document.getElementById("prereqPreview").textContent = "Invalid format"
+  }
+})
   if (!course) {
     result.textContent = "❌ Course name cannot be empty"
     return
