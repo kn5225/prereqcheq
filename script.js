@@ -94,7 +94,7 @@ async function VerModeAccept(courseOverride = null) {
   }
   const course = data[0];
   if (course.PREREQS.length === 0) {
-    CheckBoxDiv.innerHTML = "<p>No prerequisites f this course.</p>"
+    CheckBoxDiv.innerHTML = "<p>No prerequisites for this course.</p>"
     return
   }
   const prerequisites = course.PREREQS;
