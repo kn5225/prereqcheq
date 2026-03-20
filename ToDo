@@ -1,6 +1,7 @@
-Add options to delete records or update table
+Add options to delete records or update table - create admin website
 Create UI template for site
 Work on styling, increase font sizes and add headers, make buttons interesting
-Figure out case of ECE 201
-Use AI + LLM to find and add new classes
+Figure out case of ECE 201 - implement substitution rule
+Use API + LLM to find and add new classes
 Sanitize user inputs and add rate limiting
+Create RecMode
