@@ -67,8 +67,10 @@ async function VerModeAccept(courseOverride = null) {
     courseHistory = []
   }
   
-  let CheckBoxDiv = document.getElementById("checkBoxDiv");
-  CheckBoxDiv.innerHTML = "";
+  const oldDiv = document.getElementById("checkBoxDiv")
+  const CheckBoxDiv = document.createElement("div")
+  CheckBoxDiv.id = "checkBoxDiv"
+  oldDiv.replaceWith(CheckBoxDiv)
 
   if (courseHistory.length > 0) {
     const backBtn = document.createElement("button")
@@ -96,15 +98,13 @@ async function VerModeAccept(courseOverride = null) {
     return
   }
   const prerequisites = course.PREREQS;
-  
-  prerequisites.forEach((group, index) => {
   const CheckBoxDiv = document.getElementById("checkBoxDiv");
+  prerequisites.forEach((group, index) => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
   checkbox.id = `group-${index}`;
   const label = document.createElement("label");
   label.htmlFor = `group-${index}`;
-  label.textContent = group.join(" OR ");
   group.forEach((c, i) => {
       const span = document.createElement("span")
       span.textContent = c
@@ -112,7 +112,8 @@ async function VerModeAccept(courseOverride = null) {
       span.style.textDecoration = "underline"
       span.style.color = "#881c3c"
       span.addEventListener("click", (e) => {
-        e.preventDefault()
+        e.preventDefault();
+        e.stopPropagation();
         VerModeAccept(c)
       })
       label.appendChild(span)
