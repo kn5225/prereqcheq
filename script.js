@@ -207,11 +207,15 @@ async function AdmAddAccept(){
   if (!course) {
     result.textContent = "❌ Course name cannot be empty"
     return
+  if (!prereqraw) {
+  prerequisites = []
+  return
+} 
+
   }
   let prerequisites
   try {
     prerequisites = parsePrereqString(prereqraw)
-    if (prerequisites.length === 0) throw new Error()
   }
   catch {
     result.textContent = "Invalid format for prerequisites"
