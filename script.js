@@ -98,7 +98,6 @@ async function VerModeAccept(courseOverride = null) {
     return
   }
   const prerequisites = course.PREREQS;
-  const CheckBoxDiv = document.getElementById("checkBoxDiv");
   prerequisites.forEach((group, index) => {
   const checkbox = document.createElement("input");
   checkbox.type = "checkbox";
