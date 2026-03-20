@@ -56,13 +56,16 @@ function VerMode() {
   VerSubmit.addEventListener("click", () => VerModeAccept());
 }
 
-async function VerModeAccept(courseOverride = null) {
+async function VerModeAccept(courseOverride = null, isBack = false) {
   const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
-  if (courseOverride) {
+  if (courseOverride && !isBack) {
     const previous = document.getElementById("VerInput").value;
     courseHistory.push(previous);
     document.getElementById("VerInput").value = courseOverride;
   } 
+  else if (courseOverride && isBack) {
+    document.getElementById("VerInput").value = courseOverride;
+  }
   else {
     courseHistory = []
   }
@@ -77,7 +80,7 @@ async function VerModeAccept(courseOverride = null) {
     backBtn.textContent = "← Back"
     backBtn.addEventListener("click", () => {
       const prev = courseHistory.pop()
-      VerModeAccept(prev)
+      VerModeAccept(prev, true)
     })
     CheckBoxDiv.appendChild(backBtn)
     CheckBoxDiv.appendChild(document.createElement("br"))
