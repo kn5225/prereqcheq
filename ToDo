@@ -5,4 +5,3 @@ Figure out case of ECE 201 - implement substitution rule
 Use API + LLM to find and add new classes
 Sanitize user inputs and add rate limiting
 Create RecMode
-Ensure empty prereqs stored as [] nor [[""]] and fix empty-prereqs handling accordingly
