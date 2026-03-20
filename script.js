@@ -258,8 +258,6 @@ async function AdmAddAccept(){
   prerequisites = []
   return
 } 
-
-  }
   let prerequisites
   try {
     prerequisites = parsePrereqString(prereqraw)
