@@ -64,7 +64,7 @@ async function VerModeAccept() {
     CheckBoxDiv.innerHTML = "<p>Course not found.</p>"
   }
   const course = data[0];
-  const prerequisites = course.PREREQS.prerequisites;
+  const prerequisites = course.PREREQS;
   
   prerequisites.forEach((group, index) => {
   const CheckBoxDiv = document.getElementById("checkBoxDiv");
@@ -214,7 +214,7 @@ async function AdmAddAccept(){
   }
   const {error} = await supabase
     .from("prereqlookup")
-    .insert({ COURSE: course, PREREQS: {prerequisites}})
+    .insert({ COURSE: course, PREREQS: prerequisites})
 
   if (error){
     result.textContent = "Error adding course"
