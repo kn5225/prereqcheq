@@ -4,3 +4,5 @@ Work on styling, increase font sizes and add headers, make buttons interesting
 Figure out case of ECE 201 - implement substitution rule
 Use API + LLM to find and add new classes
 Create RecMode
+Remove check button: make it always running
+maybe add option to save the course to a list 
