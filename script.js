@@ -71,7 +71,7 @@ function formatCourse(input) {
 
 function formatPrereqString(input) {
   const parsed = parsePrereqString(input)
-  const validCourse = /^[A-Z]{2,4}\s\d{3}[A-Z]?$/
+  const validCourse = /^[A-Z]{2,7}\s\d{3}[A-Z]?$/
   const allValid = parsed.every(group =>
     group.every(course => validCourse.test(formatCourse(course)))
   )
@@ -297,11 +297,11 @@ function ContribMode() {
 
   input1.addEventListener("input", (e) => {
     const val = e.target.value.trim().toUpperCase()
-    const valid = /^[A-Z]{2,4}\s\d{3}[A-Z]?$/.test(val)
+    const valid = /^[A-Z]{2,7}\s\d{3}[A-Z]?$/.test(val)
     if (!val) {
       courseHint.textContent = ""
     } else if (valid) {
-      courseHint.textContent = "✅ Valid format"
+      courseHint.textContent = "Valid format"
       courseHint.style.color = "green"
     } else {
       courseHint.textContent = "Expected format: DEPT 000 (Eg. ECE 210)"
@@ -385,10 +385,8 @@ function AdmMode() {
   const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." });
   const button = makeElement("button", { type: "button", id: "AdmModeSubmit", innerText: "Submit" });
   const errP = makeElement("p", { id: "loginErr" });
-  MainArea.appendChild(input1);
-  MainArea.appendChild(document.createElement("br"));
-  MainArea.appendChild(input2);
-  MainArea.appendChild(document.createElement("br"));
+  MainArea.appendChild(input1); appendBr(MainArea);
+  MainArea.appendChild(input2); appendBr(MainArea);
   MainArea.appendChild(button);
   MainArea.appendChild(errP);
   button.addEventListener("click", AdmModeAccept)
