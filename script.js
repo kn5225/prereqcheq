@@ -134,7 +134,6 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       const span = document.createElement("span")
       span.textContent = c
       span.style.cursor = "pointer"
-      span.style.textDecoration = "underline"
       span.style.color = "#881c3c"
       span.addEventListener("click", (e) => {
         e.preventDefault();
@@ -144,10 +143,28 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       label.appendChild(span)
 
       if (substitutions[c]) {
-        label.appendChild(document.createTextNode(
-        ` (or all of: ${substitutions[c].join(", ")})`
-      ))
-    }  
+        label.appendChild(document.createTextNode(" (or all of: "))
+  
+        substitutions[c].forEach((sub, si) => {
+          const subSpan = document.createElement("span")
+          subSpan.textContent = sub
+          subSpan.style.cursor = "pointer"
+          subSpan.style.color = "#881c3c"
+          subSpan.addEventListener("click", (e) => {
+          e.preventDefault()
+          e.stopPropagation()
+          if (courseHistory.includes(sub)) return
+          VerModeAccept(sub)
+          })
+          
+          label.appendChild(subSpan)
+          if (si < substitutions[c].length - 1) {
+            label.appendChild(document.createTextNode(", "))
+            }
+          })
+
+  label.appendChild(document.createTextNode(")"))
+        }
       
       if (i < group.length - 1) {
         label.appendChild(document.createTextNode(" OR "))
