@@ -1,6 +1,6 @@
 import { SUPABASE_URL, SUPABASE_KEY } from "./config.js"
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
-
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let courseHistory = []
 let substitutions = {}
 
@@ -23,6 +23,7 @@ function isValidPrereqs(input) {
   if (parsed.length > 10 || parsed.some(group => group.length > 5)) return false
   return true
 }
+
 async function loadSubstitutions() {
   const { data } = await supabase.from("substitutions").select("*")
   data.forEach(s => substitutions[s.original] = s.replacements)
@@ -41,38 +42,41 @@ function meetsPrereqs(prerequisites, completed) {
     group.some(course => meetsCourse(course, completed))
   )
 }
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+
+function getMainArea() { return document.getElementById("MainArea") }
+
+function makeElement(tag, props = {}) {
+  const el = document.createElement(tag)
+  Object.assign(el, props)
+  return el
+}
+
+function appendBr(parent) {
+  parent.appendChild(document.createElement("br"))
+}
+
+function reattachListeners() {
+  document.getElementById("VerifMode").addEventListener("click", VerMode)
+  document.getElementById("ReccomMode").addEventListener("click", RecMode)
+  document.getElementById("AdminMode").addEventListener("click", AdmMode)
+}
 await loadSubstitutions()
-const VerifMode = document.getElementById("VerifMode");
-VerifMode.addEventListener("click",VerMode);
-const ReccomMode = document.getElementById("ReccomMode");
-ReccomMode.addEventListener("click",RecMode);
-const AdminMode = document.getElementById("AdminMode");
-AdminMode.addEventListener("click",AdmMode);
+reattachListeners()
 const ButtonArea=document.getElementById("ButtonArea");
 const ButtonHTML = ButtonArea.innerHTML;
 
 
 
 function VerMode() {
-  let OldContent = document.getElementById("MainArea");
-  OldContent.innerHTML = "";
-  var input=document.createElement("input");
-  input.type = "text";
-  input.id="VerInput";
-  input.placeholder="Enter course..."
-  var button=document.createElement("button");
-  button.type="button";
-  button.id="VerModeSubmit";
-  button.innerText="Submit";
-  const MainArea = document.getElementById("MainArea");
-  const checkBoxDiv = document.createElement("div")
-  checkBoxDiv.id="checkBoxDiv"
+  let MainArea = getMainArea();
+  MainArea.innerHTML = "";
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course..." });
+  const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
+  const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   MainArea.appendChild(input);
   MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
-  const VerSubmit=document.getElementById("VerModeSubmit");
-  VerSubmit.addEventListener("click", () => VerModeAccept());
+  button.addEventListener("click", () => VerModeAccept())
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
@@ -117,7 +121,7 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
     return
   }
   const course = data[0];
-  if (course.PREREQS.length === 0) {
+  if (!course.PREREQS || !Array.isArray(course.PREREQS) || course.PREREQS.length === 0) {
     const p = document.createElement("p")
     p.textContent = "No prerequisites for this course."
     CheckBoxDiv.appendChild(p)
@@ -138,6 +142,7 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       span.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
+        if (courseHistory.includes(c)) return  // add this
         VerModeAccept(c)
       })
       label.appendChild(span)
@@ -251,31 +256,19 @@ async function RecModeAccept() {
   })
 }
 function AdmMode() {
-  let OldContent = document.getElementById("MainArea");
-  OldContent.innerHTML = "";
-  var input1=document.createElement("input");
-  input1.type = "email";
-  input1.id="AdmInputEmail";
-  input1.placeholder="Enter email...";
-  var input2=document.createElement("input");
-  input2.type = "password";
-  input2.id="AdmInputPassword";
-  input2.placeholder="Enter password...";
-  var button=document.createElement("button");
-  button.type="button";
-  button.id="AdmModeSubmit";
-  button.innerText="Submit";
-  const errP = document.createElement("p");
-  errP.id="loginErr"
-  const MainArea = document.getElementById("MainArea");
+  const MainArea = getMainArea()
+  MainArea.innerHTML = ""
+  const input1 = makeElement("input", { type: "email", id: "AdmInputEmail", placeholder: "Enter email..." });
+  const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." });
+  const button = makeElement("button", { type: "button", id: "AdmModeSubmit", innerText: "Submit" });
+  const errP = makeElement("p", { id: "loginErr" });
   MainArea.appendChild(input1);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(input2);
   MainArea.appendChild(document.createElement("br"));
   MainArea.appendChild(button);
   MainArea.appendChild(errP);
-  const AdmSubmit=document.getElementById("AdmModeSubmit");
-  AdmSubmit.addEventListener("click",AdmModeAccept)
+  button.addEventListener("click", AdmModeAccept)
 }
 
 async function AdmModeAccept() {
@@ -288,60 +281,34 @@ async function AdmModeAccept() {
     document.getElementById("loginErr").textContent = "Invalid credentials!";
     return
   }
-  console.log("Logged in")
   AdmModeAdd()
 }
 
 function AdmModeAdd(){
-  let OldContent1= document.getElementById("ButtonArea");
-  OldContent1.innerHTML = "";
-  let OldContent2= document.getElementById("MainArea");
-  OldContent2.innerHTML = "";
-  var input3=document.createElement("input");
-  input3.type = "text";
-  input3.id="AdmAddCourse";
-  input3.placeholder="Enter course (Eg. ECE 213)";
-  var input4=document.createElement("input");
-  input4.type = "text";
-  input4.id="AdmAddPrereqs";
-  input4.placeholder='Enter prerequisites (Eg. (MATH 132  PHYSICS 151) AND (CS 187) or "None" if none exist';
-  const preview = document.createElement("p")
-  preview.id = "prereqPreview"
-  var button1=document.createElement("button");
-  button1.type="button";
-  button1.id="AdmModeAdd";
-  button1.innerText="Submit";
-  var result=document.createElement("p");
-  result.id="AddResult"
-  var button2=document.createElement("button");
-  button2.type="button";
-  button2.id="AdmModeLogout";
-  button2.innerText="Log out";
-  const MainArea = document.getElementById("MainArea");
-  MainArea.appendChild(input3);
-  MainArea.appendChild(document.createElement("br"));
-  MainArea.appendChild(input4);
-  MainArea.appendChild(preview)
-  document.getElementById("AdmAddPrereqs").addEventListener("input", (e) => {
-  try {
-    const parsed = parsePrereqString(e.target.value)
-    document.getElementById("prereqPreview").textContent = JSON.stringify(parsed)
-  } 
-  catch {
-    document.getElementById("prereqPreview").textContent = "Invalid format"
-  }
+   document.getElementById("ButtonArea").innerHTML = ""
+  const MainArea = getMainArea()
+  MainArea.innerHTML = ""
+  const input3 = makeElement("input", { type: "text", id: "AdmAddCourse", placeholder: "Enter course (Eg. ECE 213)" });
+  const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "None" if none exist' });
+  const preview = makeElement("p", { id: "prereqPreview" });
+  const button1 = makeElement("button", { type: "button", id: "AdmModeAdd", innerText: "Submit" });
+  const result = makeElement("p", { id: "AddResult" });
+  const button2 = makeElement("button", { type: "button", id: "AdmModeLogout", innerText: "Log out" });
+  input4.addEventListener("input", (e) => {
+    try {
+      preview.textContent = "Preview: " + JSON.stringify(parsePrereqString(e.target.value))
+    } catch {
+      preview.textContent = "Invalid format"
+    }
   })
-  MainArea.appendChild(document.createElement("br"));
-  MainArea.appendChild(button1);
-  MainArea.appendChild(document.createElement("br"));
-  MainArea.appendChild(result);
-  MainArea.appendChild(document.createElement("br"));
-  MainArea.appendChild(button2);
-  
-  const AdmModeSubmit=document.getElementById("AdmModeAdd");
-  AdmModeSubmit.addEventListener("click",AdmAddAccept)
-  const AdmModeLogout=document.getElementById("AdmModeLogout");
-  AdmModeLogout.addEventListener("click",AdmLogout)
+  MainArea.appendChild(input3); appendBr(MainArea)
+  MainArea.appendChild(input4)
+  MainArea.appendChild(preview); appendBr(MainArea)
+  MainArea.appendChild(button1); appendBr(MainArea)
+  MainArea.appendChild(result); appendBr(MainArea)
+  MainArea.appendChild(button2)
+  button1.addEventListener("click", AdmAddAccept)
+  button2.addEventListener("click", AdmLogout)
 }
 
 async function AdmAddAccept(){
@@ -357,17 +324,15 @@ async function AdmAddAccept(){
   return
   }
   
-  let prerequisites
-  if (!prereqraw || prereqraw === 'None') {
-  prerequisites = []
-  } 
+  let prerequisites = []
+  if (prereqraw && prereqraw !== 'NONE') {
   try {
     prerequisites = parsePrereqString(prereqraw)
-  }
-  catch {
+  } catch {
     result.textContent = "Invalid format for prerequisites"
     return
   }
+}
   const {error} = await supabase
     .from("prereqlookup")
     .insert({ COURSE: course, PREREQS: prerequisites})
@@ -380,12 +345,10 @@ async function AdmAddAccept(){
 }
 async function AdmLogout(){
   await supabase.auth.signOut();
-  let MainArea = document.getElementById("MainArea");
+  let MainArea = getMainArea();
   MainArea.innerHTML = "<p>Logged out.</p>";
   let ButtonArea=document.getElementById("ButtonArea");
   ButtonArea.innerHTML=ButtonHTML;
-  document.getElementById("VerifMode").addEventListener("click", VerMode)
-  document.getElementById("ReccomMode").addEventListener("click", RecMode)
-  document.getElementById("AdminMode").addEventListener("click", AdmMode)
+  reattachListeners()
   
 }
