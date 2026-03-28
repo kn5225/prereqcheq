@@ -1,19 +1,8 @@
 import { SUPABASE_URL, SUPABASE_KEY } from "./config.js"
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
 
-const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
-const VerifMode = document.getElementById("VerifMode");
-VerifMode.addEventListener("click",VerMode);
-const ReccomMode = document.getElementById("ReccomMode");
-ReccomMode.addEventListener("click",RecMode);
-const AdminMode = document.getElementById("AdminMode");
-AdminMode.addEventListener("click",AdmMode);
-
-const ButtonArea=document.getElementById("ButtonArea");
-const ButtonHTML = ButtonArea.innerHTML;
-
 let courseHistory = []
+let substitutions = {}
 
 function parsePrereqString(input) {
   input = input.trim()
@@ -34,6 +23,36 @@ function isValidPrereqs(input) {
   if (parsed.length > 10 || parsed.some(group => group.length > 5)) return false
   return true
 }
+async function loadSubstitutions() {
+  const { data } = await supabase.from("substitutions").select("*")
+  data.forEach(s => substitutions[s.original] = s.replacements)
+}
+
+function meetsCourse(course, completed) {
+  if (completed.includes(course)) return true
+  if (substitutions[course]) {
+    return substitutions[course].every(sub => completed.includes(sub))
+  }
+  return false
+}
+
+function meetsPrereqs(prerequisites, completed) {
+  return prerequisites.every(group =>
+    group.some(course => meetsCourse(course, completed))
+  )
+}
+const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
+await loadSubstitutions()
+const VerifMode = document.getElementById("VerifMode");
+VerifMode.addEventListener("click",VerMode);
+const ReccomMode = document.getElementById("ReccomMode");
+ReccomMode.addEventListener("click",RecMode);
+const AdminMode = document.getElementById("AdminMode");
+AdminMode.addEventListener("click",AdmMode);
+const ButtonArea=document.getElementById("ButtonArea");
+const ButtonHTML = ButtonArea.innerHTML;
+
+
 
 function VerMode() {
   let OldContent = document.getElementById("MainArea");
@@ -124,6 +143,12 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       })
       label.appendChild(span)
 
+      if (substitutions[c]) {
+        label.appendChild(document.createTextNode(
+        ` (or all of: ${substitutions[c].join(", ")})`
+      ))
+    }  
+      
       if (i < group.length - 1) {
         label.appendChild(document.createTextNode(" OR "))
       }
