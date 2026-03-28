@@ -71,6 +71,13 @@ function formatCourse(input) {
 
 function formatPrereqString(input) {
   const parsed = parsePrereqString(input)
+  const validCourse = /^[A-Z]{2,4}\s\d{3}[A-Z]?$/
+  const allValid = parsed.every(group =>
+    group.every(course => validCourse.test(formatCourse(course)))
+  )
+  
+  if (!allValid) throw new Error("Invalid course code in prerequisites")
+  
   return parsed.map(group => group.map(course => formatCourse(course)))
 }
 
@@ -288,7 +295,6 @@ function ContribMode() {
   const button = makeElement("button", { type: "button", id: "ContribSubmit", innerText: "Submit" })
   const result = makeElement("p", { id: "ContribResult" })
 
-  // Option 3 — live course format hint
   input1.addEventListener("input", (e) => {
     const val = e.target.value.trim().toUpperCase()
     const valid = /^[A-Z]{2,4}\s\d{3}[A-Z]?$/.test(val)
@@ -299,24 +305,24 @@ function ContribMode() {
       courseHint.style.color = "green"
     } else {
       courseHint.textContent = "Expected format: DEPT 000 (Eg. ECE 210)"
-      courseHint.style.color = "gray"
+      courseHint.style.color = "black"
     }
   })
 
-  // Live prereq preview using formatPrereqString
   input2.addEventListener("input", (e) => {
-    try {
-      preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
-      prereqHint.textContent = ""
-    } catch {
-      preview.textContent = ""
-      prereqHint.textContent = "Invalid format"
-      prereqHint.style.color = "red"
-    }
-  })
+  try {
+    preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
+    prereqHint.textContent = ""
+    preview.style.color = "gray"
+  } catch {
+    preview.textContent = ""
+    prereqHint.textContent = "Invalid format"
+    prereqHint.style.color = "red"
+  }
+})
 
   MainArea.appendChild(input1)
-  MainArea.appendChild(courseHint); appendBr(MainArea)
+  MainArea.appendChild(courseHint)
   MainArea.appendChild(input2)
   MainArea.appendChild(prereqHint)
   MainArea.appendChild(preview); appendBr(MainArea)
@@ -327,7 +333,7 @@ function ContribMode() {
 }
 
 async function ContribModeAccept() {
-  const course = formatCourse(document.getElementById("ContribCourse").value)  // Option 2
+  const course = formatCourse(document.getElementById("ContribCourse").value)
   const prereqraw = sanitize(document.getElementById("ContribPrereqs").value)
   const result = document.getElementById("ContribResult")
 
