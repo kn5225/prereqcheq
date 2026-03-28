@@ -195,7 +195,60 @@ function VerModeMet() {
   CheckBoxDiv.appendChild(result)
 }
 function RecMode() {
-  
+  const MainArea = getMainArea()
+  MainArea.innerHTML = ""
+
+  const input = makeElement("input", { 
+    type: "text", 
+    id: "RecInput", 
+    placeholder: "Enter completed courses separated by commas (Eg. ECE 201, MATH 132)" 
+  })
+  const button = makeElement("button", { 
+    type: "button", 
+    id: "RecSubmit", 
+    innerText: "Get Recommendations" 
+  })
+  const resultDiv = makeElement("div", { id: "RecResults" })
+
+  MainArea.appendChild(input)
+  appendBr(MainArea)
+  MainArea.appendChild(button)
+  appendBr(MainArea)
+  MainArea.appendChild(resultDiv)
+
+  button.addEventListener("click", RecModeAccept)
+}
+
+async function RecModeAccept() {
+  const completed = document.getElementById("RecInput").value
+    .split(",")
+    .map(c => sanitize(c))
+    .filter(c => c.length > 0)
+
+  const resultDiv = document.getElementById("RecResults")
+  resultDiv.innerHTML = ""
+
+  const { data, error } = await supabase.from("prereqlookup").select("*")
+
+  if (error) { console.error(error); return }
+
+  const eligible = data.filter(course => {
+    if (!course.PREREQS || !Array.isArray(course.PREREQS) || course.PREREQS.length === 0) return false
+    return meetsPrereqs(course.PREREQS, completed)
+  })
+
+  if (eligible.length === 0) {
+    const p = document.createElement("p")
+    p.textContent = "No courses available with your completed courses."
+    resultDiv.appendChild(p)
+    return
+  }
+
+  eligible.forEach(course => {
+    const p = document.createElement("p")
+    p.textContent = course.COURSE
+    resultDiv.appendChild(p)
+  })
 }
 function AdmMode() {
   let OldContent = document.getElementById("MainArea");
