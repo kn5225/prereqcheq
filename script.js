@@ -59,7 +59,21 @@ function reattachListeners() {
   document.getElementById("VerifMode").addEventListener("click", VerMode)
   document.getElementById("ReccomMode").addEventListener("click", RecMode)
   document.getElementById("AdminMode").addEventListener("click", AdmMode)
+  document.getElementById("ContribMode").addEventListener("click", ContribMode)
 }
+
+function formatCourse(input) {
+  return input
+    .trim()
+    .toUpperCase()
+    .replace(/^([A-Z]+)\s*(\d+[A-Z]?)$/, "$1 $2")
+}
+
+function formatPrereqString(input) {
+  const parsed = parsePrereqString(input)
+  return parsed.map(group => group.map(course => formatCourse(course)))
+}
+
 await loadSubstitutions()
 reattachListeners()
 const ButtonArea=document.getElementById("ButtonArea");
@@ -255,6 +269,109 @@ async function RecModeAccept() {
     resultDiv.appendChild(p)
   })
 }
+
+function ContribMode() {
+  const MainArea = getMainArea()
+  MainArea.innerHTML = ""
+
+  const input1 = makeElement("input", { type: "text", id: "ContribCourse", placeholder: "Enter course (Eg. ECE 213)" })
+  const courseHint = makeElement("p", { id: "ContribCourseHint" })
+  courseHint.style.fontSize = "12px"
+  courseHint.style.color = "gray"
+
+  const input2 = makeElement("input", { type: "text", id: "ContribPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "None"' })
+  const prereqHint = makeElement("p", { id: "ContribPrereqHint" })
+  prereqHint.style.fontSize = "12px"
+  prereqHint.style.color = "gray"
+
+  const preview = makeElement("p", { id: "ContribPreview" })
+  const button = makeElement("button", { type: "button", id: "ContribSubmit", innerText: "Submit" })
+  const result = makeElement("p", { id: "ContribResult" })
+
+  // Option 3 — live course format hint
+  input1.addEventListener("input", (e) => {
+    const val = e.target.value.trim().toUpperCase()
+    const valid = /^[A-Z]{2,4}\s\d{3}[A-Z]?$/.test(val)
+    if (!val) {
+      courseHint.textContent = ""
+    } else if (valid) {
+      courseHint.textContent = "✅ Valid format"
+      courseHint.style.color = "green"
+    } else {
+      courseHint.textContent = "Expected format: DEPT 000 (Eg. ECE 210)"
+      courseHint.style.color = "gray"
+    }
+  })
+
+  // Live prereq preview using formatPrereqString
+  input2.addEventListener("input", (e) => {
+    try {
+      preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
+      prereqHint.textContent = ""
+    } catch {
+      preview.textContent = ""
+      prereqHint.textContent = "Invalid format"
+      prereqHint.style.color = "red"
+    }
+  })
+
+  MainArea.appendChild(input1)
+  MainArea.appendChild(courseHint); appendBr(MainArea)
+  MainArea.appendChild(input2)
+  MainArea.appendChild(prereqHint)
+  MainArea.appendChild(preview); appendBr(MainArea)
+  MainArea.appendChild(button); appendBr(MainArea)
+  MainArea.appendChild(result)
+
+  button.addEventListener("click", ContribModeAccept)
+}
+
+async function ContribModeAccept() {
+  const course = formatCourse(document.getElementById("ContribCourse").value)  // Option 2
+  const prereqraw = sanitize(document.getElementById("ContribPrereqs").value)
+  const result = document.getElementById("ContribResult")
+
+  if (!course) {
+    result.textContent = "Course name cannot be empty"
+    return
+  }
+
+  if (!isValidPrereqs(prereqraw)) {
+    result.textContent = "Prerequisites too complex or too long"
+    return
+  }
+
+  const { data: existing } = await supabase
+    .from("prereqlookup")
+    .select("COURSE")
+    .eq("COURSE", course)
+
+  if (existing && existing.length > 0) {
+    result.textContent = "This course already exists in the database"
+    return
+  }
+
+  let prerequisites = []
+  if (prereqraw && prereqraw !== "NONE") {
+    try {
+      prerequisites = formatPrereqString(prereqraw)  // Option 2
+    } catch {
+      result.textContent = "Invalid format for prerequisites"
+      return
+    }
+  }
+
+  const { error } = await supabase
+    .from("user_submissions")
+    .insert({ COURSE: course, PREREQS: prerequisites })
+
+  if (error) {
+    result.textContent = "Error submitting course"
+    return
+  }
+  result.textContent = "Submitted for review! Thank you."
+}
+
 function AdmMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
