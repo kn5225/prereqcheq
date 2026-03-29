@@ -1,4 +1,4 @@
-import { SUPABASE_URL, SUPABASE_KEY } from "./config.js"
+import { SUPABASE_URL, SUPABASE_KEY, COURSES_TABLE, SUBMISSIONS_TABLE } from "./config.js"
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let courseHistory = []
@@ -131,7 +131,7 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
   }
   
   const { data, error } = await supabase
-    .from("prereqlookup")
+    .from(COURSES_TABLE)
     .select("*")
     .eq("COURSE", VerClass)
   if (error) { console.error(error); return }
@@ -254,7 +254,7 @@ async function RecModeAccept() {
   const resultDiv = document.getElementById("RecResults")
   resultDiv.innerHTML = ""
 
-  const { data, error } = await supabase.from("prereqlookup").select("*")
+  const { data, error } = await supabase.from(COURSES_TABLE).select("*")
 
   if (error) { console.error(error); return }
 
@@ -348,7 +348,7 @@ async function ContribModeAccept() {
   }
 
   const { data: existing } = await supabase
-    .from("prereqlookup")
+    .from(COURSES_TABLE)
     .select("COURSE")
     .eq("COURSE", course)
 
@@ -368,7 +368,7 @@ async function ContribModeAccept() {
   }
 
   const { error } = await supabase
-    .from("user_submissions")
+    .from(SUBMISSIONS_TABLE)
     .insert({ COURSE: course, PREREQS: prerequisites })
 
   if (error) {
@@ -455,7 +455,7 @@ async function AdmAddAccept(){
   }
 }
   const {error} = await supabase
-    .from("prereqlookup")
+    .from(COURSES_TABLE)
     .insert({ COURSE: course, PREREQS: prerequisites})
 
   if (error){
