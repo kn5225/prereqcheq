@@ -6,7 +6,7 @@ header{
   background-color: #881c1c;
 }
 #buttonarea{}
-#VerifMode, #ReccomMode, #AdminMode, #ContribMode{
+#VerifMode, #ReccomMode, #ContribMode{
   background-color: #ffffff;
 }
 #VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs,#RecInput {
@@ -14,3 +14,16 @@ header{
   background-color: #ffffff;
   min-width: 100px;
 } 
+#AdminMode {
+  font-size: 0.7rem;
+  color: var(--border);
+  border: none;
+  background: none;
+  cursor: pointer;
+}
+
+#AdminMode:hover {
+  color: var(--grey);
+  background: none;
+  box-shadow: none;
+}
