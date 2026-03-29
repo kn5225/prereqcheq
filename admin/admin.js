@@ -77,7 +77,12 @@ function showLogin() {
 }
 
 function showAdminPanel() {
+  const ButtonArea = document.getElementById("ButtonArea")
+  const logoutBtn = makeElement("button", { type: "button", id: "AdmLogoutBtn", innerText: "Log out" })
+  ButtonArea.appendChild(logoutBtn)
+
   document.getElementById("AdmAdd").addEventListener("click", AdmModeAdd)
+  document.getElementById("AdmUpdate").addEventListener("click", AdmModeUpdate)
   document.getElementById("AdmReview").addEventListener("click", AdmReview)
   document.getElementById("AdmLogoutBtn").addEventListener("click", AdmLogout)
 }
@@ -106,26 +111,104 @@ function AdmModeAdd() {
   MainArea.appendChild(button1); appendBr(MainArea)
   MainArea.appendChild(result)
 
-  button1.addEventListener("click", async () => {
-    const course = formatCourse(document.getElementById("AdmAddCourse").value)
-    const prereqraw = sanitize(document.getElementById("AdmAddPrereqs").value)
-    const result = document.getElementById("AddResult")
+  button1.addEventListener("click", AdmAddAccept)
+}
 
-    if (!course) { result.textContent = "❌ Course name cannot be empty"; return }
-    if (!isValidPrereqs(prereqraw)) { result.textContent = "❌ Prerequisites too complex or too long"; return }
+async function AdmAddAccept() {
+  const course = formatCourse(document.getElementById("AdmAddCourse").value)
+  const prereqraw = sanitize(document.getElementById("AdmAddPrereqs").value)
+  const result = document.getElementById("AddResult")
 
-    let prerequisites = []
-    if (prereqraw && prereqraw !== "NONE") {
-      try { prerequisites = formatPrereqString(prereqraw) }
-      catch { result.textContent = "❌ Invalid format for prerequisites"; return }
+  if (!course) { result.textContent = "❌ Course name cannot be empty"; return }
+  if (!isValidPrereqs(prereqraw)) { result.textContent = "❌ Prerequisites too complex or too long"; return }
+
+  let prerequisites = []
+  if (prereqraw && prereqraw !== "NONE") {
+    try { prerequisites = formatPrereqString(prereqraw) }
+    catch { result.textContent = "❌ Invalid format for prerequisites"; return }
+  }
+
+  const { error } = await supabase
+    .from(COURSES_TABLE)
+    .insert({ COURSE: course, PREREQS: prerequisites })
+
+  result.textContent = error ? "❌ Error adding course" : "✅ Course added!"
+}
+
+function AdmModeUpdate() {
+  const MainArea = getMainArea()
+  MainArea.innerHTML = ""
+
+  const input1 = makeElement("input", { type: "text", id: "UpdateCourse", placeholder: "Enter course to update (Eg. ECE 213)" })
+  const searchBtn = makeElement("button", { type: "button", id: "UpdateSearch", innerText: "Search" })
+  const result = makeElement("p", { id: "UpdateResult" })
+
+  MainArea.appendChild(input1); appendBr(MainArea)
+  MainArea.appendChild(searchBtn); appendBr(MainArea)
+  MainArea.appendChild(result)
+
+  searchBtn.addEventListener("click", AdmUpdateSearch)
+}
+
+async function AdmUpdateSearch() {
+  const course = sanitize(document.getElementById("UpdateCourse").value)
+  const result = document.getElementById("UpdateResult")
+
+  if (!course) { result.textContent = "❌ Course name cannot be empty"; return }
+
+  const { data, error } = await supabase
+    .from(COURSES_TABLE)
+    .select("*")
+    .eq("COURSE", course)
+
+  if (error) { result.textContent = "❌ Error searching"; return }
+  if (!data || data.length === 0) { result.textContent = "❌ Course not found"; return }
+
+  result.textContent = ""
+
+  const current = data[0]
+  const currentPrereqs = makeElement("p", { textContent: `Current prerequisites: ${JSON.stringify(current.PREREQS)}` })
+  const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "None"' })
+  const preview = makeElement("p", { id: "UpdatePreview" })
+  const updateBtn = makeElement("button", { type: "button", id: "UpdateSubmit", innerText: "Update" })
+  const updateResult = makeElement("p", { id: "UpdateConfirm" })
+
+  input2.addEventListener("input", (e) => {
+    try {
+      preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
+    } catch {
+      preview.textContent = "Invalid format"
     }
-
-    const { error } = await supabase
-      .from(COURSES_TABLE)
-      .insert({ COURSE: course, PREREQS: prerequisites })
-
-    result.textContent = error ? "❌ Error adding course" : "✅ Course added!"
   })
+
+  const MainArea = getMainArea()
+  MainArea.appendChild(currentPrereqs)
+  MainArea.appendChild(input2)
+  MainArea.appendChild(preview); appendBr(MainArea)
+  MainArea.appendChild(updateBtn); appendBr(MainArea)
+  MainArea.appendChild(updateResult)
+
+  updateBtn.addEventListener("click", () => AdmUpdateAccept(course))
+}
+
+async function AdmUpdateAccept(course) {
+  const prereqraw = sanitize(document.getElementById("UpdatePrereqs").value)
+  const updateResult = document.getElementById("UpdateConfirm")
+
+  if (!isValidPrereqs(prereqraw)) { updateResult.textContent = "❌ Prerequisites too complex or too long"; return }
+
+  let prerequisites = []
+  if (prereqraw && prereqraw !== "NONE") {
+    try { prerequisites = formatPrereqString(prereqraw) }
+    catch { updateResult.textContent = "❌ Invalid format for prerequisites"; return }
+  }
+
+  const { error } = await supabase
+    .from(COURSES_TABLE)
+    .update({ PREREQS: prerequisites })
+    .eq("COURSE", course)
+
+  updateResult.textContent = error ? "❌ Error updating course" : "✅ Course updated!"
 }
 
 async function AdmReview() {
