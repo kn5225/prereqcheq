@@ -78,9 +78,10 @@ function showLogin() {
 
 function showAdminPanel() {
   const ButtonArea = document.getElementById("ButtonArea")
+  const existing = document.getElementById("AdmLogoutBtn")
+  if (existing) existing.remove()
   const logoutBtn = makeElement("button", { type: "button", id: "AdmLogoutBtn", innerText: "Log out" })
   ButtonArea.appendChild(logoutBtn)
-
   document.getElementById("AdmAdd").addEventListener("click", AdmModeAdd)
   document.getElementById("AdmUpdate").addEventListener("click", AdmModeUpdate)
   document.getElementById("AdmReview").addEventListener("click", AdmReview)
