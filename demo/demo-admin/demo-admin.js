@@ -42,59 +42,22 @@ function isValidPrereqs(input) {
   return parsed.length <= 10 && parsed.every(group => group.length <= 5)
 }
 
-const { data: { session } } = await supabase.auth.getSession()
-if (!session) {
-  showLogin()
-} else {
-  showAdminPanel()
-}
-
-function showLogin() {
-  document.getElementById("ButtonArea").innerHTML = ""
-  const MainArea = getMainArea()
-  MainArea.innerHTML = ""
-
-  const input1 = makeElement("input", { type: "email", id: "AdmInputEmail", placeholder: "Enter email..." })
-  const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." })
-  const button = makeElement("button", { type: "button", innerText: "Login" })
-  const errP = makeElement("p", { id: "loginErr" })
-  const returnDemoBtn = makeElement("button", { type: "button", innerText: "Return to demo main site" })
-  const returnMainBtn = makeElement("button", { type: "button", innerText: "Return to main site" })
-  MainArea.appendChild(input1); appendBr(MainArea)
-  MainArea.appendChild(input2); appendBr(MainArea)
-  MainArea.appendChild(button)
-  MainArea.appendChild(errP)
-  MainArea.appendChild(returnDemoBtn)
-  MainArea.appendChild(returnMainBtn)
-
-  returnDemoBtn.addEventListener("click", () => {
-    window.location.href = "../"
-  })
-  returnMainBtn.addEventListener("click", () => {
-    window.location.href = "../../"
-  })
-  button.addEventListener("click", async () => {
-    const email = document.getElementById("AdmInputEmail").value
-    const password = document.getElementById("AdmInputPassword").value
-    const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) {
-      document.getElementById("loginErr").textContent = "❌ Invalid credentials"
-      return
-    }
-    showAdminPanel()
-  })
-}
+showAdminPanel()
 
 function showAdminPanel() {
   const ButtonArea = document.getElementById("ButtonArea")
   const existing = document.getElementById("AdmLogoutBtn")
   if (existing) existing.remove()
-  const logoutBtn = makeElement("button", { type: "button", id: "AdmLogoutBtn", innerText: "Log out" })
+  const logoutBtn = makeElement("button", { type: "button", id: "AdmLogoutBtn", innerText: "Log out to demo main site" })
+  const returnBtn = makeElement("button", { type: "button", id: "AdmReturnBtn", innerText: "Return to main site" })
+
   ButtonArea.appendChild(logoutBtn)
+  ButtonArea.appendChild(returnBtn)
   document.getElementById("AdmAdd").addEventListener("click", AdmModeAdd)
   document.getElementById("AdmUpdate").addEventListener("click", AdmModeUpdate)
   document.getElementById("AdmReview").addEventListener("click", AdmReview)
-  document.getElementById("AdmLogoutBtn").addEventListener("click", AdmLogout)
+  document.getElementById("AdmLogoutBtn").addEventListener("click", () => {window.location.href = "../"})
+  document.getElementById("AdmReturnBtn").addEventListener("click", () => { window.location.href = "../../" })
 }
 
 function AdmModeAdd() {
@@ -288,9 +251,4 @@ async function AdmReview() {
     div.appendChild(rejectBtn)
     MainArea.appendChild(div)
   })
-}
-
-async function AdmLogout() {
-  await supabase.auth.signOut()
-  showLogin()
 }
