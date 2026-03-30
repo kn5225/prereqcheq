@@ -221,37 +221,45 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
 }
 
 function VerModeMet() {
-  const checkButton = document.createElement("button")
-  checkButton.textContent = "Check Prerequisites"
   const result = document.createElement("p")
   result.id = "prereqResult"
-  checkButton.addEventListener("click", () => {
+  document.getElementById("checkBoxDiv").appendChild(result)
+
+  document.getElementById("checkBoxDiv").addEventListener("change", () => {
     const checkboxes = document.querySelectorAll("#checkBoxDiv input[type='checkbox']")
     const allMet = [...checkboxes].every(cb => cb.checked)
-    result.textContent = allMet ? "Prerequisites met" : "Prerequisites not met"
+    result.textContent = allMet ? "✅ Prerequisites met" : "❌ Prerequisites not met"
   })
-  
-  const CheckBoxDiv = document.getElementById("checkBoxDiv");
-  CheckBoxDiv.appendChild(checkButton)
-  CheckBoxDiv.appendChild(result)
 }
 function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const input = makeElement("input", { 
-    type: "text", 
-    id: "RecInput", 
-    placeholder: "Enter completed courses separated by commas (Eg. ECE 201, MATH 132)" 
+  const label = makeElement("p", { textContent: "Enter your completed courses:" })
+  label.style.fontWeight = "500"
+  label.style.marginBottom = "8px"
+
+  const input = makeElement("input", {
+    type: "text",
+    id: "RecInput",
+    placeholder: "Eg. ECE 201, MATH 132, PHYSICS 151"
   })
-  const button = makeElement("button", { 
-    type: "button", 
-    id: "RecSubmit", 
-    innerText: "Get Recommendations" 
+
+  const hint = makeElement("p", { textContent: "Separate courses with commas" })
+  hint.style.fontSize = "0.78rem"
+  hint.style.color = "gray"
+
+  const button = makeElement("button", {
+    type: "button",
+    id: "RecSubmit",
+    innerText: "Get Recommendations"
   })
+
   const resultDiv = makeElement("div", { id: "RecResults" })
 
+  MainArea.appendChild(label)
   MainArea.appendChild(input)
+  MainArea.appendChild(hint)
   appendBr(MainArea)
   MainArea.appendChild(button)
   appendBr(MainArea)
@@ -269,6 +277,16 @@ async function RecModeAccept() {
   const resultDiv = document.getElementById("RecResults")
   resultDiv.innerHTML = ""
 
+  if (completed.length === 0) {
+    const p = makeElement("p", { textContent: "Please enter at least one completed course." })
+    resultDiv.appendChild(p)
+    return
+  }
+
+  const loading = makeElement("p", { textContent: "Finding eligible courses..." })
+  loading.style.color = "gray"
+  resultDiv.appendChild(loading)
+
   const { data, error } = await supabase.from(COURSES_TABLE).select("*")
 
   if (error) { console.error(error); return }
@@ -278,18 +296,30 @@ async function RecModeAccept() {
     return meetsPrereqs(course.PREREQS, completed)
   })
 
+  resultDiv.innerHTML = ""
+
   if (eligible.length === 0) {
-    const p = document.createElement("p")
-    p.textContent = "No courses available with your completed courses."
+    const p = makeElement("p", { textContent: "No courses available with your completed courses." })
     resultDiv.appendChild(p)
     return
   }
 
-  eligible.forEach(course => {
-    const p = document.createElement("p")
-    p.textContent = course.COURSE
-    resultDiv.appendChild(p)
+  const count = makeElement("p", { textContent: `${eligible.length} course${eligible.length > 1 ? "s" : ""} available:` })
+  count.style.fontWeight = "500"
+  count.style.marginBottom = "8px"
+  resultDiv.appendChild(count)
+
+  const list = document.createElement("div")
+  list.style.cssText = "background:white; border:1px solid #d1d5db; border-top:3px solid #881c3c; border-radius:3px; padding:16px;"
+
+  eligible.forEach((course, i) => {
+    const row = document.createElement("div")
+    row.style.cssText = `padding:6px 0; ${i < eligible.length - 1 ? "border-bottom:1px solid #f0f0f0;" : ""}`
+    row.textContent = course.COURSE
+    list.appendChild(row)
   })
+
+  resultDiv.appendChild(list)
 }
 
 function ContribMode() {
