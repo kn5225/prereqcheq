@@ -58,16 +58,20 @@ function showLogin() {
   const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." })
   const button = makeElement("button", { type: "button", innerText: "Login" })
   const errP = makeElement("p", { id: "loginErr" })
-  const returnBtn = makeElement("button", { type: "button", innerText: "Return to main site" })
-
+  const returnDemoBtn = makeElement("button", { type: "button", innerText: "Return to demo main site" })
+  const returnMainBtn = makeElement("button", { type: "button", innerText: "Return to demo main site" })
   MainArea.appendChild(input1); appendBr(MainArea)
   MainArea.appendChild(input2); appendBr(MainArea)
   MainArea.appendChild(button)
   MainArea.appendChild(errP)
-  MainArea.appendChild(returnBtn)
+  MainArea.appendChild(returnDemoBtn)
+  MainArea.appendChild(returnMainBtn)
 
-  returnBtn.addEventListener("click", () => {
+  returnDemoBtn.addEventListener("click", () => {
     window.location.href = "../"
+  })
+  returnMainBtn.addEventListener("click", () => {
+    window.location.href = "../../"
   })
   button.addEventListener("click", async () => {
     const email = document.getElementById("AdmInputEmail").value
