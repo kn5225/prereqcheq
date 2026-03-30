@@ -238,17 +238,31 @@ async function AdmReview() {
     const rejectBtn = makeElement("button", { innerText: "❌ Reject" })
 
     approveBtn.addEventListener("click", async () => {
-      const { error: insertError } = await supabase
-        .from(COURSES_TABLE)
-        .insert({ COURSE: submission.COURSE, PREREQS: submission.PREREQS })
-      if (insertError) { div.appendChild(makeElement("p", { textContent: "❌ Error approving" })); return }
-      const { error: deleteError } = await supabase
-        .from(SUBMISSIONS_TABLE)
-        .delete()
-        .eq("id", submission.id)
-      if (deleteError) { div.appendChild(makeElement("p", { textContent: "❌ Error removing submission" })); return }
-      div.remove()
-    })
+  const { data: existing } = await supabase
+    .from(COURSES_TABLE)
+    .select("COURSE")
+    .eq("COURSE", submission.COURSE)
+
+  if (existing && existing.length > 0) {
+    div.appendChild(makeElement("p", { textContent: "⚠️ Course already exists in database" }))
+    await supabase.from(SUBMISSIONS_TABLE).delete().eq("id", submission.id)
+    div.remove()
+    return
+  }
+
+  const { error: insertError } = await supabase
+    .from(COURSES_TABLE)
+    .insert({ COURSE: submission.COURSE, PREREQS: submission.PREREQS })
+  if (insertError) { div.appendChild(makeElement("p", { textContent: "❌ Error approving" })); return }
+
+  const { error: deleteError } = await supabase
+    .from(SUBMISSIONS_TABLE)
+    .delete()
+    .eq("id", submission.id)
+  if (deleteError) { div.appendChild(makeElement("p", { textContent: "❌ Error removing submission" })); return }
+
+  div.remove()
+})
 
     rejectBtn.addEventListener("click", async () => {
       const { error } = await supabase

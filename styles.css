@@ -1,19 +1,29 @@
-#title{}
-body{
+:root {
+  --maroon: #881c3c;
+  --grey: #6b7280;
+  --border: #d1d5db;
+}
+
+body {
   background-color: #a2aaad;
 }
-header{
-  background-color: #881c1c;
+
+header {
+  background-color: var(--maroon);
 }
-#buttonarea{}
-#VerifMode, #ReccomMode, #ContribMode{
+
+#ButtonArea {}
+
+#VerifMode, #ReccomMode, #ContribMode {
   background-color: #ffffff;
 }
-#VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs,#RecInput,#ContribPrereqs, #ContribCourse {
+
+#VerInput, #AdmInputEmail, #AdmInputPassword, #AdmAddCourse, #AdmAddPrereqs, #RecInput, #ContribPrereqs, #ContribCourse {
   field-sizing: content;
   background-color: #ffffff;
   min-width: 100px;
-} 
+}
+
 #AdminMode {
   font-size: 0.7rem;
   color: var(--border);
@@ -26,4 +36,34 @@ header{
   color: var(--grey);
   background: none;
   box-shadow: none;
+}
+
+#adminPopup {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.4);
+  z-index: 999;
+  align-items: center;
+  justify-content: center;
+}
+
+#adminPopup.active {
+  display: flex;
+}
+
+#adminPopup > div {
+  background: white;
+  padding: 24px 32px;
+  border-radius: 4px;
+  border-left: 3px solid var(--maroon);
+  max-width: 340px;
+  width: 100%;
+}
+
+#popupError {
+  font-size: 0.8rem;
+  color: #e74c3c;
+  margin-top: 8px;
 }
