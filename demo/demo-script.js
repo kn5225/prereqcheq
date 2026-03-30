@@ -98,8 +98,6 @@ document.getElementById("popupSubmit").addEventListener("click", async () => {
   const email = document.getElementById("popupEmail").value
   const password = document.getElementById("popupPassword").value
   if (email === "demo@demo.com" && password === "demo123") { window.location.href = "./demo-admin/"; return }
-  const { error } = await supabase.auth.signInWithPassword({ email, password })
-  if (!error) { window.location.href = "./admin/"; return }
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
 

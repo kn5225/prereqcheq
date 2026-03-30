@@ -3,23 +3,33 @@
 <head>
   <link rel="stylesheet" href="../styles.css">
   <script src="./demo-script.js" type="module" defer></script>
-  <title id='title'>PrereqCheq Admin</title>
+  <title id='title'>PrereqCheq</title>
   <header>
-      <h2>PrereqCheq</h2>
+      <h2>PreReqCheq Demo</h2>
     </header>
 </head>
 <body>
-    <p>This website allows you to add, update, and delete records for the PrereqCheq website</p>
-    <p>You can also review user submissions from the main site</p>
+    <p>This website allows you to input a Umass engineering course and check if you fufill
+    the prerequite courses, and allows you to check them off(Verification mode). We also have reccomendation
+    mode, where you can input your courses to see a list of possible courses you can now take</p>
     <p><em>Disclaimer: All data for this website is sourced from Coursicle</em></p>
     <br>
     <div id="ButtonArea">
-      <button type="button" id="AddMode">Add records</button>
-      <button type="button" id="UpdateMode">Update records</button>
-      <button type="button" id="ReviewMode">Review submissions</button>
+      <button type="button" id="VerifMode">Verification mode</button>
+      <button type="button" id="ReccomMode">Reccomendation mode</button>
+      <button type="button" id="ContribMode">Contribution mode</button>
+      <button type="button" id="AdminMode">Admin mode</button>
     </div>
-    <div id="MainArea">
-      
+    <div id="MainArea"></div>
+    <div id="adminPopup">
+      <div>
+        <h3>Admin Login</h3>
+        <input type="email" id="popupEmail" placeholder="Email" autocomplete="off">
+        <input type="password" id="popupPassword" placeholder="Password" autocomplete="off">
+        <button id="popupSubmit">Login</button>
+        <button id="popupClose">Cancel</button>
+        <p id="popupError"></p>
+      </div>
     </div>
 </body>
 
