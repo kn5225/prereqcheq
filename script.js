@@ -58,7 +58,6 @@ function appendBr(parent) {
 function reattachListeners() {
   document.getElementById("VerifMode").addEventListener("click", VerMode)
   document.getElementById("ReccomMode").addEventListener("click", RecMode)
-  document.getElementById("AdminMode").addEventListener("click", AdmMode)
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
 }
 
@@ -83,9 +82,23 @@ function formatPrereqString(input) {
 
 await loadSubstitutions()
 reattachListeners()
-const ButtonArea=document.getElementById("ButtonArea");
-const ButtonHTML = ButtonArea.innerHTML;
+document.getElementById("AdminMode").addEventListener("click", () => {
+  document.getElementById("adminPopup").classList.add("active")
+})
 
+document.getElementById("popupClose").addEventListener("click", () => {
+  document.getElementById("adminPopup").classList.remove("active")
+  document.getElementById("popupError").textContent = ""
+})
+
+document.getElementById("popupSubmit").addEventListener("click", async () => {
+  const email = document.getElementById("popupEmail").value
+  const password = document.getElementById("popupPassword").value
+  const { error } = await supabase.auth.signInWithPassword({ email, password })
+  if (!error) { window.location.href = "./admin/"; return }
+  if (email === "demo@demo.com" && password === "demo123") { window.location.href = "./demo-admin/"; return }
+  document.getElementById("popupError").textContent = "❌ Invalid credentials"
+})
 
 
 function VerMode() {
@@ -378,98 +391,3 @@ async function ContribModeAccept() {
   result.textContent = "Submitted for review! Thank you."
 }
 
-function AdmMode() {
-  const MainArea = getMainArea()
-  MainArea.innerHTML = ""
-  const input1 = makeElement("input", { type: "email", id: "AdmInputEmail", placeholder: "Enter email..." });
-  const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." });
-  const button = makeElement("button", { type: "button", id: "AdmModeSubmit", innerText: "Submit" });
-  const errP = makeElement("p", { id: "loginErr" });
-  MainArea.appendChild(input1); appendBr(MainArea);
-  MainArea.appendChild(input2); appendBr(MainArea);
-  MainArea.appendChild(button);
-  MainArea.appendChild(errP);
-  button.addEventListener("click", AdmModeAccept)
-}
-
-async function AdmModeAccept() {
-  const email = document.getElementById("AdmInputEmail").value
-  const password = document.getElementById("AdmInputPassword").value
-
-  const { data, error } = await supabase.auth.signInWithPassword({ email, password })
-
-  if (error) {
-    document.getElementById("loginErr").textContent = "Invalid credentials!";
-    return
-  }
-  AdmModeAdd()
-}
-
-function AdmModeAdd(){
-   document.getElementById("ButtonArea").innerHTML = ""
-  const MainArea = getMainArea()
-  MainArea.innerHTML = ""
-  const input3 = makeElement("input", { type: "text", id: "AdmAddCourse", placeholder: "Enter course (Eg. ECE 213)" });
-  const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "None" if none exist' });
-  const preview = makeElement("p", { id: "prereqPreview" });
-  const button1 = makeElement("button", { type: "button", id: "AdmModeAdd", innerText: "Submit" });
-  const result = makeElement("p", { id: "AddResult" });
-  const button2 = makeElement("button", { type: "button", id: "AdmModeLogout", innerText: "Log out" });
-  input4.addEventListener("input", (e) => {
-    try {
-      preview.textContent = "Preview: " + JSON.stringify(parsePrereqString(e.target.value))
-    } catch {
-      preview.textContent = "Invalid format"
-    }
-  })
-  MainArea.appendChild(input3); appendBr(MainArea)
-  MainArea.appendChild(input4)
-  MainArea.appendChild(preview); appendBr(MainArea)
-  MainArea.appendChild(button1); appendBr(MainArea)
-  MainArea.appendChild(result); appendBr(MainArea)
-  MainArea.appendChild(button2)
-  button1.addEventListener("click", AdmAddAccept)
-  button2.addEventListener("click", AdmLogout)
-}
-
-async function AdmAddAccept(){
-  const course= sanitize(document.getElementById("AdmAddCourse").value);
-  const prereqraw= sanitize(document.getElementById("AdmAddPrereqs").value.trim());
-  const result= document.getElementById("AddResult")
-  if (!course) {
-    result.textContent = "❌ Course name cannot be empty"
-    return
-  }
-  if (!isValidPrereqs(prereqraw)) {
-  result.textContent = "❌ Prerequisites too complex or too long"
-  return
-  }
-  
-  let prerequisites = []
-  if (prereqraw && prereqraw !== 'NONE') {
-  try {
-    prerequisites = parsePrereqString(prereqraw)
-  } catch {
-    result.textContent = "Invalid format for prerequisites"
-    return
-  }
-}
-  const {error} = await supabase
-    .from(COURSES_TABLE)
-    .insert({ COURSE: course, PREREQS: prerequisites})
-
-  if (error){
-    result.textContent = "Error adding course"
-    return
-      }
-  result.textContent = "Course Added!"
-}
-async function AdmLogout(){
-  await supabase.auth.signOut();
-  let MainArea = getMainArea();
-  MainArea.innerHTML = "<p>Logged out.</p>";
-  let ButtonArea=document.getElementById("ButtonArea");
-  ButtonArea.innerHTML=ButtonHTML;
-  reattachListeners()
-  
-}
