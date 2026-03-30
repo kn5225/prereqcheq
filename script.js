@@ -338,7 +338,7 @@ function ContribMode() {
   MainArea.appendChild(courseHint)
   MainArea.appendChild(input2)
   MainArea.appendChild(prereqHint)
-  MainArea.appendChild(preview))
+  MainArea.appendChild(preview)
   MainArea.appendChild(button); appendBr(MainArea)
   MainArea.appendChild(result)
 
