@@ -82,6 +82,7 @@ function formatPrereqString(input) {
 
 await loadSubstitutions()
 reattachListeners()
+
 document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")
 })
@@ -99,7 +100,10 @@ document.getElementById("popupSubmit").addEventListener("click", async () => {
   if (!error) { window.location.href = "./admin/"; return }
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
-
+console.log("VerifMode:", document.getElementById("VerifMode"))
+console.log("ReccomMode:", document.getElementById("ReccomMode"))
+console.log("ContribMode:", document.getElementById("ContribMode"))
+console.log("AdminMode:", document.getElementById("AdminMode"))
 
 function VerMode() {
   let MainArea = getMainArea();
