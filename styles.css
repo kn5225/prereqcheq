@@ -1,35 +1,130 @@
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap');
+
 :root {
   --maroon: #881c3c;
+  --maroon-dark: #6a1530;
   --grey: #6b7280;
+  --light-grey: #f0f0f0;
   --border: #d1d5db;
+  --text: #1a1a1a;
+  --white: #ffffff;
 }
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
 
 body {
-  background-color: #a2aaad;
+  font-family: 'DM Sans', sans-serif;
+  background: var(--light-grey);
+  color: var(--text);
+  min-height: 100vh;
 }
 
+/* ── Header ── */
 header {
-  background-color: var(--maroon);
+  background: var(--maroon);
+  padding: 16px 32px;
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  box-shadow: 0 2px 8px rgba(136,28,60,0.3);
 }
 
-#ButtonArea {}
-
-#VerifMode, #ReccomMode, #ContribMode {
-  background-color: #ffffff;
+/* UMass wordmark using pure CSS — no image needed */
+header::before {
+  content: 'UMass';
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--white);
+  background: var(--maroon-dark);
+  padding: 4px 10px;
+  border-radius: 3px;
+  letter-spacing: 0.05em;
+  border: 1px solid rgba(255,255,255,0.2);
+  flex-shrink: 0;
 }
 
-#VerInput, #AdmInputEmail, #AdmInputPassword, #AdmAddCourse, #AdmAddPrereqs, #RecInput, #ContribPrereqs, #ContribCourse {
-  field-sizing: content;
-  background-color: #ffffff;
-  min-width: 100px;
+header h2 {
+  font-family: 'Libre Baskerville', serif;
+  font-size: 1.1rem;
+  font-weight: 400;
+  color: rgba(255,255,255,0.9);
+  letter-spacing: 0.03em;
 }
+
+/* ── Page content ── */
+.page-content {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: 36px 28px 80px;
+}
+
+body > p,
+body > br {
+  max-width: 760px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 28px;
+  padding-right: 28px;
+}
+
+body > p {
+  color: var(--grey);
+  font-size: 0.9rem;
+  margin-top: 28px;
+  line-height: 1.6;
+}
+
+body > p:first-of-type {
+  margin-top: 32px;
+}
+
+body > p em {
+  font-style: italic;
+  font-size: 0.82rem;
+}
+
+/* ── Button area ── */
+#ButtonArea {
+  max-width: 760px;
+  margin: 20px auto 0;
+  padding: 0 28px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+  align-items: center;
+}
+
+/* ── Buttons ── */
+button {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  font-weight: 500;
+  padding: 9px 18px;
+  border-radius: 3px;
+  cursor: pointer;
+  border: 1px solid var(--border);
+  background: var(--white);
+  color: var(--text);
+  transition: all 0.15s ease;
+}
+
+button:hover {
+  background: var(--maroon);
+  color: var(--white);
+  border-color: var(--maroon);
+}
+
+button:active { transform: translateY(1px); }
 
 #AdminMode {
-  font-size: 0.7rem;
+  font-size: 0.72rem;
   color: var(--border);
   border: none;
   background: none;
   cursor: pointer;
+  margin-left: auto;
+  padding: 4px 8px;
 }
 
 #AdminMode:hover {
@@ -38,32 +133,173 @@ header {
   box-shadow: none;
 }
 
+/* ── Main area ── */
+#MainArea {
+  max-width: 760px;
+  margin: 32px auto 0;
+  padding: 0 28px;
+}
+
+/* ── Inputs ── */
+input[type="text"],
+input[type="email"],
+input[type="password"] {
+  font-family: 'DM Sans', sans-serif;
+  font-size: 0.88rem;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  background: var(--white);
+  color: var(--text);
+  outline: none;
+  width: 280px;
+  transition: border-color 0.15s ease;
+}
+
+input[type="text"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus {
+  border-color: var(--maroon);
+}
+
+input::placeholder { color: var(--border); }
+
+/* ── Checklist ── */
+#checkBoxDiv {
+  margin-top: 20px;
+  background: var(--white);
+  border: 1px solid var(--border);
+  border-top: 3px solid var(--maroon);
+  border-radius: 3px;
+  padding: 20px;
+}
+
+#checkBoxDiv div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--light-grey);
+}
+
+#checkBoxDiv div:last-of-type { border-bottom: none; }
+
+input[type="checkbox"] {
+  appearance: none;
+  width: 16px; height: 16px; min-width: 16px;
+  border: 1px solid var(--border);
+  border-radius: 2px;
+  background: var(--white);
+  cursor: pointer;
+  position: relative;
+  transition: all 0.15s ease;
+}
+
+input[type="checkbox"]:checked {
+  background: var(--maroon);
+  border-color: var(--maroon);
+}
+
+input[type="checkbox"]:checked::after {
+  content: '✓';
+  position: absolute;
+  top: 50%; left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 10px;
+  color: white;
+}
+
+label {
+  font-size: 0.88rem;
+  color: var(--grey);
+  cursor: pointer;
+  line-height: 1.4;
+}
+
+/* ── Results ── */
+#prereqResult,
+#AddResult,
+#ContribResult,
+#UpdateConfirm {
+  font-size: 0.88rem;
+  margin-top: 12px;
+  color: var(--grey);
+  min-height: 20px;
+}
+
+/* ── Hints and previews ── */
+#ContribCourseHint,
+#ContribPrereqHint,
+#prereqPreview,
+#ContribPreview,
+#UpdatePreview {
+  font-size: 0.78rem;
+  color: var(--grey);
+  margin-top: 4px;
+  min-height: 18px;
+}
+
+/* ── Spacing ── */
+#MainArea br { display: block; margin-bottom: 10px; content: ''; }
+#MainArea p  { color: var(--grey); font-size: 0.88rem; margin-top: 8px; }
+
+/* ── Admin popup ── */
 #adminPopup {
   display: none;
   position: fixed;
   top: 0; left: 0;
   width: 100%; height: 100%;
-  background: rgba(0,0,0,0.4);
+  background: rgba(0,0,0,0.45);
   z-index: 999;
   align-items: center;
   justify-content: center;
 }
 
-#adminPopup.active {
-  display: flex;
-}
+#adminPopup.active { display: flex; }
 
 #adminPopup > div {
-  background: white;
-  padding: 24px 32px;
-  border-radius: 4px;
-  border-left: 3px solid var(--maroon);
+  background: var(--white);
+  padding: 32px;
+  border-radius: 3px;
+  border-top: 3px solid var(--maroon);
   max-width: 340px;
   width: 100%;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.15);
+}
+
+#adminPopup h3 {
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+#adminPopup input {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+#adminPopup button {
+  margin-right: 8px;
+  margin-top: 4px;
 }
 
 #popupError {
   font-size: 0.8rem;
-  color: #e74c3c;
+  color: #c0392b;
   margin-top: 8px;
+  min-height: 18px;
+}
+
+/* ── Responsive ── */
+@media (max-width: 500px) {
+  header { padding: 12px 18px; }
+  #ButtonArea { flex-direction: column; padding: 0 18px; }
+  #ButtonArea button { width: 100%; }
+  #MainArea { padding: 0 18px; }
+  input[type="text"],
+  input[type="email"],
+  input[type="password"] { width: 100%; }
 }
