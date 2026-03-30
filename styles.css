@@ -9,7 +9,7 @@ header{
 #VerifMode, #ReccomMode, #ContribMode{
   background-color: #ffffff;
 }
-#VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs,#RecInput {
+#VerInput,#AdmInputEmail,#AdmInputPassword,#AdmAddCourse,#AdmAddPrereqs,#RecInput,#ContribPrereqs, #ContribCourse {
   field-sizing: content;
   background-color: #ffffff;
   min-width: 100px;
