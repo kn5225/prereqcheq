@@ -59,7 +59,7 @@ function showLogin() {
   const button = makeElement("button", { type: "button", innerText: "Login" })
   const errP = makeElement("p", { id: "loginErr" })
   const returnDemoBtn = makeElement("button", { type: "button", innerText: "Return to demo main site" })
-  const returnMainBtn = makeElement("button", { type: "button", innerText: "Return to demo main site" })
+  const returnMainBtn = makeElement("button", { type: "button", innerText: "Return to main site" })
   MainArea.appendChild(input1); appendBr(MainArea)
   MainArea.appendChild(input2); appendBr(MainArea)
   MainArea.appendChild(button)
