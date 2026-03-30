@@ -58,12 +58,17 @@ function showLogin() {
   const input2 = makeElement("input", { type: "password", id: "AdmInputPassword", placeholder: "Enter password..." })
   const button = makeElement("button", { type: "button", innerText: "Login" })
   const errP = makeElement("p", { id: "loginErr" })
+  const returnBtn = makeElement("button", { type: "button", innerText: "Return to main site" })
 
   MainArea.appendChild(input1); appendBr(MainArea)
   MainArea.appendChild(input2); appendBr(MainArea)
   MainArea.appendChild(button)
   MainArea.appendChild(errP)
+  MainArea.appendChild(returnBtn)
 
+  returnBtn.addEventListener("click", () => {
+    window.location.href = "../"
+  })
   button.addEventListener("click", async () => {
     const email = document.getElementById("AdmInputEmail").value
     const password = document.getElementById("AdmInputPassword").value

@@ -90,6 +90,8 @@ document.getElementById("AdminMode").addEventListener("click", () => {
 document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.remove("active")
   document.getElementById("popupError").textContent = ""
+  document.getElementById("popupEmail").value = ""
+  document.getElementById("popupPassword").value = ""
 })
 
 document.getElementById("popupSubmit").addEventListener("click", async () => {
@@ -100,10 +102,6 @@ document.getElementById("popupSubmit").addEventListener("click", async () => {
   if (!error) { window.location.href = "./admin/"; return }
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
-console.log("VerifMode:", document.getElementById("VerifMode"))
-console.log("ReccomMode:", document.getElementById("ReccomMode"))
-console.log("ContribMode:", document.getElementById("ContribMode"))
-console.log("AdminMode:", document.getElementById("AdminMode"))
 
 function VerMode() {
   let MainArea = getMainArea();
