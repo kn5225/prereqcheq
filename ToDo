@@ -1,7 +1,5 @@
-Create UI template for site
-Work on styling, increase font sizes and add headers, make buttons interesting
+Work on website style
 Use API + LLM to find and add new classes
-Remove check button: make it always running
-maybe add option to save the course to a list 
+Maybe add option to save the course to a list 
 Maybe add type-dropdown feature
-Fix issues in demo-admin - check C for exact issues
+Allow updates to existing courses through Contibution Mode
