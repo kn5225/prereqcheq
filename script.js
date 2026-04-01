@@ -86,6 +86,9 @@ reattachListeners()
 document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")
 })
+document.getElementById("DemoMode").addEventListener("click", () => {
+  window.location.href = "./demo/"
+})
 
 document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.remove("active")
@@ -97,7 +100,6 @@ document.getElementById("popupClose").addEventListener("click", () => {
 document.getElementById("popupSubmit").addEventListener("click", async () => {
   const email = document.getElementById("popupEmail").value
   const password = document.getElementById("popupPassword").value
-  if (email === "demo@demo.com" && password === "demo123") { window.location.href = "./demo/demo-admin/"; return }
   const { error } = await supabase.auth.signInWithPassword({ email, password })
   if (!error) { window.location.href = "./admin/"; return }
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
