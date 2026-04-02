@@ -98,7 +98,10 @@ document.getElementById("popupClose").addEventListener("click", () => {
 document.getElementById("popupSubmit").addEventListener("click", async () => {
   const email = document.getElementById("popupEmail").value
   const password = document.getElementById("popupPassword").value
+  console.log("Email:", email)
+  console.log("Password:", password)
   const { error } = await supabase.auth.signInWithPassword({ email, password })
+  console.log("Error:", error)
   if (!error) { window.location.href = "./admin/"; return }
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
