@@ -204,36 +204,36 @@ async function AdmReview() {
     const div = document.createElement("div")
     div.style.cssText = "border-left:3px solid #881c3c; padding-left:10px; margin-bottom:16px"
 
-    const course = makeElement("p", { textContent: `Course: ${submission.COURSE}` })
+    const course = makeElement("p", { 
+    textContent: `${submission.is_correction ? "🔄 Correction" : "➕ New"} — ${submission.COURSE}` })
     const prereqs = makeElement("p", { textContent: `Prerequisites: ${JSON.stringify(submission.PREREQS)}` })
     const approveBtn = makeElement("button", { innerText: "✅ Approve" })
     const rejectBtn = makeElement("button", { innerText: "❌ Reject" })
 
     approveBtn.addEventListener("click", async () => {
-  const { data: existing } = await supabase
-    .from(COURSES_TABLE)
-    .select("COURSE")
-    .eq("COURSE", submission.COURSE)
-
-  if (existing && existing.length > 0) {
-    div.appendChild(makeElement("p", { textContent: "⚠️ Course already exists in database" }))
+      if (submission.is_correction){
+      const { data: existing } = await supabase
+      .from(COURSES_TABLE)
+      .select("COURSE")
+      .eq("COURSE", submission.COURSE)
+      if (error) { div.appendChild(makeElement("p", { textContent: "❌ Error applying correction" })); return } 
+    }
+    else {
+    const { data: existing } = await supabase
+      .from(COURSES_TABLE)
+      .select("COURSE")
+      .eq("COURSE", submission.COURSE)
+    if (existing && existing.length > 0) {
+      await supabase.from(SUBMISSIONS_TABLE).delete().eq("id", submission.id)
+      div.remove()
+      return
+    }
+    const { error } = await supabase
+      .from(COURSES_TABLE)
+      .insert({ COURSE: submission.COURSE, PREREQS: submission.PREREQS })
+    if (error) { div.appendChild(makeElement("p", { textContent: "❌ Error approving" })); return }}
     await supabase.from(SUBMISSIONS_TABLE).delete().eq("id", submission.id)
     div.remove()
-    return
-  }
-
-  const { error: insertError } = await supabase
-    .from(COURSES_TABLE)
-    .insert({ COURSE: submission.COURSE, PREREQS: submission.PREREQS })
-  if (insertError) { div.appendChild(makeElement("p", { textContent: "❌ Error approving" })); return }
-
-  const { error: deleteError } = await supabase
-    .from(SUBMISSIONS_TABLE)
-    .delete()
-    .eq("id", submission.id)
-  if (deleteError) { div.appendChild(makeElement("p", { textContent: "❌ Error removing submission" })); return }
-
-  div.remove()
 })
 
     rejectBtn.addEventListener("click", async () => {

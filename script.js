@@ -25,7 +25,8 @@ function isValidPrereqs(input) {
 }
 
 async function loadSubstitutions() {
-  const { data } = await supabase.from("substitutions").select("*")
+  const { data, error } = await supabase.from("substitutions").select("*")
+  if (error || !data) { console.error("Failed to load substitutions", error); return }
   data.forEach(s => substitutions[s.original] = s.replacements)
 }
 
@@ -55,10 +56,14 @@ function appendBr(parent) {
   parent.appendChild(document.createElement("br"))
 }
 
-function reattachListeners() {
+function attachListeners() {
   document.getElementById("VerifMode").addEventListener("click", VerMode)
   document.getElementById("ReccomMode").addEventListener("click", RecMode)
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
+  document.getElementById("AdminMode").addEventListener("click", () => {
+  document.getElementById("adminPopup").classList.add("active")})
+  document.getElementById("DemoMode").addEventListener("click", () => {
+  window.location.href = "./demo/"})
 }
 
 function formatCourse(input) {
@@ -81,14 +86,7 @@ function formatPrereqString(input) {
 }
 
 await loadSubstitutions()
-reattachListeners()
-
-document.getElementById("AdminMode").addEventListener("click", () => {
-  document.getElementById("adminPopup").classList.add("active")
-})
-document.getElementById("DemoMode").addEventListener("click", () => {
-  window.location.href = "./demo/"
-})
+attachListeners()
 
 document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.remove("active")
@@ -393,17 +391,6 @@ async function ContribModeAccept() {
     result.textContent = "Prerequisites too complex or too long"
     return
   }
-
-  const { data: existing } = await supabase
-    .from(COURSES_TABLE)
-    .select("COURSE")
-    .eq("COURSE", course)
-
-  if (existing && existing.length > 0) {
-    result.textContent = "This course already exists in the database"
-    return
-  }
-
   let prerequisites = []
   if (prereqraw && prereqraw !== "NONE") {
     try {
@@ -413,7 +400,20 @@ async function ContribModeAccept() {
       return
     }
   }
+  const { data: existing } = await supabase
+    .from(COURSES_TABLE)
+    .select("COURSE")
+    .eq("COURSE", course)
 
+  if (existing && existing.length > 0) {
+    const { error } = await supabase
+    .from(SUBMISSIONS_TABLE)
+    .insert({ COURSE: course, PREREQS: prerequisites, is_correction: true })
+
+    if (error) { result.textContent = "❌ Error submitting correction"; return }
+    result.textContent = "✅ Correction submitted for review! Thank you."
+    return
+  }
   const { error } = await supabase
     .from(SUBMISSIONS_TABLE)
     .insert({ COURSE: course, PREREQS: prerequisites })
