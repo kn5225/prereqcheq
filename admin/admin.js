@@ -102,7 +102,9 @@ function AdmModeAdd() {
   MainArea.innerHTML = ""
 
   const input3 = makeElement("input", { type: "text", id: "AdmAddCourse", placeholder: "Enter course (Eg. ECE 213)" })
+  const courseHint = makeElement("p", { id: "AdminAddCourseHint" })
   const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "NONE"' })
+  const prereqHint = makeElement("p", { id: "AdmAaddPrereqHint" })
   const preview = makeElement("p", { id: "prereqPreview" })
   const button1 = makeElement("button", { type: "button", innerText: "Submit" })
   const result = makeElement("p", { id: "AddResult" })
@@ -139,7 +141,9 @@ function AdmModeAdd() {
 })
 
   MainArea.appendChild(input3); appendBr(MainArea)
+  MainArea.appendChild(courseHint)
   MainArea.appendChild(input4)
+  MainArea.appendChild(prereqHint)
   MainArea.appendChild(preview); appendBr(MainArea)
   MainArea.appendChild(button1); appendBr(MainArea)
   MainArea.appendChild(result)
