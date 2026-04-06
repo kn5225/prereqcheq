@@ -1,7 +1,7 @@
 import { SUPABASE_URL, SUPABASE_KEY, COURSES_TABLE, SUBMISSIONS_TABLE } from "../config.js"
 import { createClient } from "https://esm.sh/@supabase/supabase-js"
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
-
+const ButtonHTML = document.getElementById("ButtonArea").innerHTML;
 function getMainArea() { return document.getElementById("MainArea") }
 
 function makeElement(tag, props = {}) {
@@ -49,6 +49,7 @@ if (!session) {
   showAdminPanel()
 }
 
+
 function showLogin() {
   document.getElementById("ButtonArea").innerHTML = ""
   const MainArea = getMainArea()
@@ -82,9 +83,12 @@ function showLogin() {
 }
 
 function showAdminPanel() {
-  const ButtonArea = document.getElementById("ButtonArea")
+  let MainArea = getMainArea()
+  MainArea.innerHTML = ""
+  let ButtonArea = document.getElementById("ButtonArea")
+  ButtonArea.innerHTML = ButtonHTML
   const existing = document.getElementById("AdmLogoutBtn")
-  if (existing) existing.remove()
+  if (existing) {existing.remove()}
   const logoutBtn = makeElement("button", { type: "button", id: "AdmLogoutBtn", innerText: "Log out" })
   ButtonArea.appendChild(logoutBtn)
   document.getElementById("AdmAdd").addEventListener("click", AdmModeAdd)
@@ -102,6 +106,20 @@ function AdmModeAdd() {
   const preview = makeElement("p", { id: "prereqPreview" })
   const button1 = makeElement("button", { type: "button", innerText: "Submit" })
   const result = makeElement("p", { id: "AddResult" })
+  input3.addEventListener("input", (e) => {
+    const val = e.target.value.trim().toUpperCase()
+    const valid = /^[A-Z]{2,7}\s\d{3}[A-Z]?$/.test(val)
+    if (!val) {
+      courseHint.textContent = ""
+    } else if (valid) {
+      courseHint.textContent = "Valid format"
+      courseHint.style.color = "green"
+    } else {
+      courseHint.textContent = "Expected format: DEPT 000 (Eg. ECE 210)"
+      courseHint.style.color = "black"
+    }
+  })
+
   input4.addEventListener("input", (e) => {
   const val = e.target.value.trim().toUpperCase()
   if (val === "NONE") {
