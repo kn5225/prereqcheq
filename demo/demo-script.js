@@ -330,7 +330,7 @@ function ContribMode() {
   courseHint.style.fontSize = "12px"
   courseHint.style.color = "gray"
 
-  const input2 = makeElement("input", { type: "text", id: "ContribPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "None"' })
+  const input2 = makeElement("input", { type: "text", id: "ContribPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "NONE"' })
   const prereqHint = makeElement("p", { id: "ContribPrereqHint" })
   prereqHint.style.fontSize = "12px"
   prereqHint.style.color = "gray"
@@ -354,6 +354,13 @@ function ContribMode() {
   })
 
   input2.addEventListener("input", (e) => {
+  const val = e.target.value.trim().toUpperCase()
+  if (val === "NONE") {
+    preview.textContent = "No prerequisites"
+    prereqHint.textContent = ""
+    return
+  }
+
   try {
     preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
     prereqHint.textContent = ""
@@ -393,7 +400,7 @@ async function ContribModeAccept() {
   let prerequisites = []
   if (prereqraw && prereqraw !== "NONE") {
     try {
-      prerequisites = formatPrereqString(prereqraw)  // Option 2
+      prerequisites = formatPrereqString(prereqraw)
     } catch {
       result.textContent = "Invalid format for prerequisites"
       return
