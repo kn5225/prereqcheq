@@ -399,7 +399,7 @@ async function ContribModeAccept() {
     return
   }
   let prerequisites = []
-  if (prereqraw && prereqraw !== "NONE") {
+  if (prereqraw && prereqraw !== "None") {
     try {
       prerequisites = formatPrereqString(prereqraw)  // Option 2
     } catch {
