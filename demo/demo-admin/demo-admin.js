@@ -65,18 +65,29 @@ function AdmModeAdd() {
   MainArea.innerHTML = ""
 
   const input3 = makeElement("input", { type: "text", id: "AdmAddCourse", placeholder: "Enter course (Eg. ECE 213)" })
-  const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "None"' })
+  const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "NONE"' })
   const preview = makeElement("p", { id: "prereqPreview" })
   const button1 = makeElement("button", { type: "button", innerText: "Submit" })
   const result = makeElement("p", { id: "AddResult" })
 
-  input4.addEventListener("input", (e) => {
-    try {
-      preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
-    } catch {
-      preview.textContent = "Invalid format"
-    }
-  })
+ input2.addEventListener("input", (e) => {
+  const val = e.target.value.trim().toUpperCase()
+  if (val === "NONE") {
+    preview.textContent = "No prerequisites"
+    prereqHint.textContent = ""
+    return
+  }
+
+  try {
+    preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
+    prereqHint.textContent = ""
+    preview.style.color = "gray"
+  } catch {
+    preview.textContent = ""
+    prereqHint.textContent = "Invalid format"
+    prereqHint.style.color = "red"
+  }
+})
 
   MainArea.appendChild(input3); appendBr(MainArea)
   MainArea.appendChild(input4)
@@ -141,7 +152,7 @@ async function AdmUpdateSearch() {
 
   const current = data[0]
   const currentPrereqs = makeElement("p", { textContent: `Current prerequisites: ${JSON.stringify(current.PREREQS)}` })
-  const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "None"' })
+  const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "NONE"' })
   const preview = makeElement("p", { id: "UpdatePreview" })
   const updateBtn = makeElement("button", { type: "button", id: "UpdateSubmit", innerText: "Update" })
   const updateResult = makeElement("p", { id: "UpdateConfirm" })
