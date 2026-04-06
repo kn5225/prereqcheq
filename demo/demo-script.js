@@ -292,6 +292,7 @@ async function RecModeAccept() {
 
   const eligible = data.filter(course => {
     if (!course.PREREQS || !Array.isArray(course.PREREQS) || course.PREREQS.length === 0) return false
+    if (completed.includes(course.COURSE)) return false
     return meetsPrereqs(course.PREREQS, completed)
   })
 
