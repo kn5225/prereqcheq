@@ -62,8 +62,6 @@ function attachListeners() {
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
   document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")})
-  document.getElementById("DemoMode").addEventListener("click", () => {
-  window.location.href = "./demo/"})
 }
 
 function formatCourse(input) {
