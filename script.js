@@ -355,6 +355,13 @@ function ContribMode() {
   })
 
   input2.addEventListener("input", (e) => {
+  const val = e.target.value.trim().toUpperCase()
+  if (val === "None") {
+    preview.textContent = "No prerequisites"
+    prereqHint.textContent = ""
+    return
+  }
+
   try {
     preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
     prereqHint.textContent = ""
