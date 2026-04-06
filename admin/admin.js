@@ -183,18 +183,28 @@ async function AdmUpdateSearch() {
 
   const current = data[0]
   const currentPrereqs = makeElement("p", { textContent: `Current prerequisites: ${JSON.stringify(current.PREREQS)}` })
-  const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "None"' })
+  const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "NONE"' })
   const preview = makeElement("p", { id: "UpdatePreview" })
   const updateBtn = makeElement("button", { type: "button", id: "UpdateSubmit", innerText: "Update" })
   const updateResult = makeElement("p", { id: "UpdateConfirm" })
 
   input2.addEventListener("input", (e) => {
-    try {
-      preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
-    } catch {
-      preview.textContent = "Invalid format"
-    }
-  })
+  const val = e.target.value.trim().toUpperCase()
+  if (val === "None") {
+    preview.textContent = "No prerequisites"
+    prereqHint.textContent = ""
+    return
+  }
+  try {
+    preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
+    prereqHint.textContent = ""
+    preview.style.color = "gray"
+  } catch {
+    preview.textContent = ""
+    prereqHint.textContent = "Invalid format"
+    prereqHint.style.color = "red"
+  }
+})
 
   const MainArea = getMainArea()
   MainArea.appendChild(currentPrereqs)
