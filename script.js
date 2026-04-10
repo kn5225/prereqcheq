@@ -85,6 +85,14 @@ function formatPrereqString(input) {
   return parsed.map(group => group.map(course => formatCourse(course)))
 }
 
+function debounce(fn, delay = 300) {
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), delay)
+  }
+}
+
 await loadSubstitutions()
 attachListeners()
 
@@ -103,16 +111,89 @@ document.getElementById("popupSubmit").addEventListener("click", async () => {
   document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
 
+document.addEventListener("click", (e) => {
+  const dropdown = document.getElementById("VerDropdown")
+  const input = document.getElementById("VerInput")
+
+  if (!dropdown || !input) return
+
+  if (!dropdown.contains(e.target) && e.target !== input) {
+    dropdown.innerHTML = ""
+  }
+})
+
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course..." });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
+  const dropdown = makeElement("div", { id: "VerDropdown" })
+  dropdown.style.cssText = `
+    border: 1px solid #ccc;
+    max-height: 150px;
+    overflow-y: auto;
+    background: white;
+    position: relative;
+  `
   MainArea.appendChild(input);
+  MainArea.appendChild(dropdown);
   MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
+  input.addEventListener("input",  debounce(VerCourseSearch, 250))
   button.addEventListener("click", () => VerModeAccept())
+}
+
+async function VerCourseSearch(e) {
+  const query = sanitize(e.target.value)
+  const dropdown = document.getElementById("VerDropdown")
+
+  dropdown.innerHTML = ""
+
+  if (!query) return
+
+  const { data, error } = await supabase
+    .from(COURSES_TABLE)
+    .select("COURSE")
+    .ilike("COURSE", `%${query}%`)
+    .limit(10)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  if (!data || data.length === 0) {
+    const noMatch = document.createElement("div")
+    noMatch.textContent = "No courses match"
+    noMatch.style.padding = "6px"
+    noMatch.style.color = "gray"
+    dropdown.appendChild(noMatch)
+    return
+  }
+
+  data.forEach(row => {
+    const option = document.createElement("div")
+    option.textContent = row.COURSE
+    option.style.padding = "6px"
+    option.style.cursor = "pointer"
+
+    option.addEventListener("click", () => {
+      document.getElementById("VerInput").value = row.COURSE
+      dropdown.innerHTML = ""   // clear dropdown
+      VerModeAccept(row.COURSE)
+    })
+
+    option.addEventListener("mouseover", () => {
+      option.style.background = "#f3f4f6"
+    })
+
+    option.addEventListener("mouseout", () => {
+      option.style.background = "white"
+    })
+
+    dropdown.appendChild(option)
+  })
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
