@@ -125,7 +125,7 @@ document.addEventListener("click", (e) => {
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Ex. ECE 241)" });
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
@@ -344,7 +344,7 @@ function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas: (Ex. ECE 241, MATH 132, ... " })
+  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas:" })
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
