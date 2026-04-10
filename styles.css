@@ -29,7 +29,7 @@ header {
   box-shadow: 0 2px 8px rgba(136,28,60,0.3);
 }
 
-/* UMass wordmark using pure CSS — no image needed */
+/* UMass wordmark */
 header::before {
   content: 'UMass';
   font-family: 'Libre Baskerville', serif;
