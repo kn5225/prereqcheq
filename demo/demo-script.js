@@ -62,6 +62,8 @@ function attachListeners() {
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
   document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")})
+  document.getElementById("DemoMode").addEventListener("click", () => {
+  window.location.href = "./demo/"})
 }
 
 function formatCourse(input) {
@@ -83,6 +85,14 @@ function formatPrereqString(input) {
   return parsed.map(group => group.map(course => formatCourse(course)))
 }
 
+function debounce(fn, delay = 300) {
+  let timeout
+  return (...args) => {
+    clearTimeout(timeout)
+    timeout = setTimeout(() => fn(...args), delay)
+  }
+}
+
 await loadSubstitutions()
 attachListeners()
 
@@ -93,37 +103,137 @@ document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("popupPassword").value = ""
 })
 
-document.getElementById("popupSubmit").addEventListener("click", async () => {
-  const email = document.getElementById("popupEmail").value
-  const password = document.getElementById("popupPassword").value
-  if (email == "demo@demo.com" && password == "demo123"){
-  window.location.href = "./demo-admin/"; return 
+document.getElementById("popupSubmit").addEventListener("click", async () => { 
+  const email = document.getElementById("popupEmail").value 
+  const password = document.getElementById("popupPassword").value 
+  if (email == "demo@demo.com" && password == "demo123")
+  { window.location.href = "./demo-admin/"; return } 
+  document.getElementById("popupError").textContent = "❌ Invalid credentials" 
+})
+
+document.addEventListener("click", (e) => {
+  const dropdown = document.getElementById("VerDropdown")
+  const input = document.getElementById("VerInput")
+
+  if (!dropdown || !input) return
+
+  if (!dropdown.contains(e.target) && e.target !== input) {
+    dropdown.innerHTML = ""
   }
-  document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
 
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course..." });
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
-  MainArea.appendChild(input);
+  const dropdown = makeElement("div", { id: "VerDropdown" })
+  dropdown.style.cssText = `
+  position: absolute;
+  width: 220px;
+  margin-top: 2px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  max-height: 160px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  left: 10px
+`
+  const wrapper = makeElement("div")
+  wrapper.style.position = "relative"
+
+  wrapper.appendChild(input)
+  wrapper.appendChild(dropdown)
+
+  MainArea.appendChild(wrapper);
   MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
+  input.addEventListener("input",  debounce(VerCourseSearch, 250))
   button.addEventListener("click", () => VerModeAccept())
 }
 
+async function VerCourseSearch(e) {
+  const query = sanitize(e.target.value)
+  const dropdown = document.getElementById("VerDropdown")
+
+  dropdown.innerHTML = ""
+
+  if (!query) return
+
+  const { data, error } = await supabase
+    .from(COURSES_TABLE)
+    .select("COURSE")
+    .ilike("COURSE", `%${query}%`)
+    .limit(10)
+
+  if (error) {
+    console.error(error)
+    return
+  }
+
+  if (!data || data.length === 0) {
+    const noMatch = document.createElement("div")
+  noMatch.textContent = "No courses match"
+  noMatch.style.cssText = `
+  padding: 4px 8px;
+  color: #9ca3af;
+  font-style: italic;
+  background: #f3f4f6;
+  `
+dropdown.appendChild(noMatch)
+    return
+  }
+  const courses = data.map(row => row.COURSE).sort()
+
+  courses.forEach(row => {
+    const option = document.createElement("div")
+    option.textContent = row
+    option.style.cssText = `
+    padding: 4px 8px;                 /* 👈 thinner */
+    cursor: pointer;
+    border-bottom: 1px solid #e5e7eb; /* separators */
+    color: #374151;
+    background: #f3f4f6;
+    white-space: nowrap;
+    `
+
+    option.addEventListener("click", () => {
+      document.getElementById("VerInput").value = row
+      dropdown.innerHTML = ""  
+      VerModeAccept(row)
+    })
+
+    option.addEventListener("mouseover", () => {
+    option.style.background = "#e5e7eb"
+    })
+
+    option.addEventListener("mouseout", () => {
+    option.style.background = "#f9fafb"
+    })
+
+    dropdown.appendChild(option)
+    })
+    if (dropdown.lastChild) {
+    dropdown.lastChild.style.borderBottom = "none"
+    }
+}
+
 async function VerModeAccept(courseOverride = null, isBack = false) {
-  const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
+  const inputEl = document.getElementById("VerInput")
+  const currentValue = sanitize(inputEl.value)
+  const VerClass = courseOverride || currentValue
   if (courseOverride && !isBack) {
-    const previous = document.getElementById("VerInput").value;
-    courseHistory.push(previous);
-    document.getElementById("VerInput").value = courseOverride;
+    if (currentValue !== courseOverride) {
+      courseHistory.push(currentValue)
+    }
+    inputEl.value = courseOverride
   } 
   else if (courseOverride && isBack) {
-    document.getElementById("VerInput").value = courseOverride;
-  }
+    inputEl.value = courseOverride
+  } 
   else {
     courseHistory = []
   }
@@ -177,7 +287,7 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       span.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (courseHistory.includes(c)) return  // add this
+        if (courseHistory.includes(c)) return
         VerModeAccept(c)
       })
       label.appendChild(span)
@@ -234,7 +344,7 @@ function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const label = makeElement("p", { textContent: "Enter your completed courses:" })
+  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas:" })
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
@@ -361,7 +471,6 @@ function ContribMode() {
     prereqHint.textContent = ""
     return
   }
-
   try {
     preview.textContent = "Preview: " + JSON.stringify(formatPrereqString(e.target.value))
     prereqHint.textContent = ""
