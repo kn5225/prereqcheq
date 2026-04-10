@@ -129,15 +129,27 @@ function VerMode() {
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
+  const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
-    border: 1px solid #ccc;
-    max-height: 150px;
-    overflow-y: auto;
-    background: white;
-    position: relative;
-  `
-  MainArea.appendChild(input);
-  MainArea.appendChild(dropdown);
+  position: absolute;
+  width: 220px;
+  margin-top: 2px;
+  border: 1px solid #d1d5db;
+  background: #f3f4f6;
+  max-height: 160px;
+  overflow-y: auto;
+  font-size: 0.85rem;
+  z-index: 1000;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  left: 10px
+`
+  const wrapper = makeElement("div")
+  wrapper.style.position = "relative"
+
+  wrapper.appendChild(input)
+  wrapper.appendChild(dropdown)
+
+  MainArea.appendChild(wrapper);
   MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
   input.addEventListener("input",  debounce(VerCourseSearch, 250))
@@ -165,35 +177,49 @@ async function VerCourseSearch(e) {
 
   if (!data || data.length === 0) {
     const noMatch = document.createElement("div")
-    noMatch.textContent = "No courses match"
-    noMatch.style.padding = "6px"
-    noMatch.style.color = "gray"
-    dropdown.appendChild(noMatch)
+  noMatch.textContent = "No courses match"
+  noMatch.style.cssText = `
+  padding: 4px 8px;
+  color: #9ca3af;
+  font-style: italic;
+  background: #f3f4f6;
+  `
+dropdown.appendChild(noMatch)
     return
   }
+  const courses = data.map(row => row.COURSE).sort()
 
-  data.forEach(row => {
+  courses.forEach(row => {
     const option = document.createElement("div")
-    option.textContent = row.COURSE
-    option.style.padding = "6px"
-    option.style.cursor = "pointer"
+    option.textContent = row
+    option.style.cssText = `
+    padding: 4px 8px;                 /* 👈 thinner */
+    cursor: pointer;
+    border-bottom: 1px solid #e5e7eb; /* separators */
+    color: #374151;
+    background: #f3f4f6;
+    white-space: nowrap;
+    `
 
     option.addEventListener("click", () => {
-      document.getElementById("VerInput").value = row.COURSE
+      document.getElementById("VerInput").value = row
       dropdown.innerHTML = ""   // clear dropdown
-      VerModeAccept(row.COURSE)
+      VerModeAccept(row)
     })
 
     option.addEventListener("mouseover", () => {
-      option.style.background = "#f3f4f6"
+    option.style.background = "#e5e7eb"
     })
 
     option.addEventListener("mouseout", () => {
-      option.style.background = "white"
+    option.style.background = "#f9fafb"
     })
 
     dropdown.appendChild(option)
-  })
+    })
+    if (dropdown.lastChild) {
+    dropdown.lastChild.style.borderBottom = "none"
+    }
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
