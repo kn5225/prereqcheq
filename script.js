@@ -223,15 +223,18 @@ dropdown.appendChild(noMatch)
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
-  const VerClass = courseOverride || sanitize(document.getElementById("VerInput").value);
+  const inputEl = document.getElementById("VerInput")
+  const currentValue = sanitize(inputEl.value)
+  const VerClass = courseOverride || currentValue
   if (courseOverride && !isBack) {
-    const previous = document.getElementById("VerInput").value;
-    courseHistory.push(previous);
-    document.getElementById("VerInput").value = courseOverride;
+    if (currentValue !== courseOverride) {
+      courseHistory.push(currentValue)
+    }
+    inputEl.value = courseOverride
   } 
   else if (courseOverride && isBack) {
-    document.getElementById("VerInput").value = courseOverride;
-  }
+    inputEl.value = courseOverride
+  } 
   else {
     courseHistory = []
   }
