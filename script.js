@@ -129,7 +129,6 @@ function VerMode() {
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
-  const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
   position: absolute;
   width: 220px;
