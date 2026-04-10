@@ -125,7 +125,7 @@ document.addEventListener("click", (e) => {
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course..." });
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Ex. ECE 241)" });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
@@ -202,7 +202,7 @@ dropdown.appendChild(noMatch)
 
     option.addEventListener("click", () => {
       document.getElementById("VerInput").value = row
-      dropdown.innerHTML = ""   // clear dropdown
+      dropdown.innerHTML = ""  
       VerModeAccept(row)
     })
 
@@ -287,7 +287,7 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
       span.addEventListener("click", (e) => {
         e.preventDefault();
         e.stopPropagation();
-        if (courseHistory.includes(c)) return  // add this
+        if (courseHistory.includes(c)) return
         VerModeAccept(c)
       })
       label.appendChild(span)
@@ -344,7 +344,7 @@ function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const label = makeElement("p", { textContent: "Enter your completed courses:" })
+  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas: (Ex. ECE 241, MATH 132, ... " })
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
