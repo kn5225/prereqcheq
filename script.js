@@ -344,7 +344,7 @@ function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas:" })
+  const label = makeElement("p", { textContent: "Enter completed courses:" })
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
