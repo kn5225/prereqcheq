@@ -103,12 +103,11 @@ document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("popupPassword").value = ""
 })
 
-document.getElementById("popupSubmit").addEventListener("click", async () => { 
-  const email = document.getElementById("popupEmail").value 
-  const password = document.getElementById("popupPassword").value 
-  if (email == "demo@demo.com" && password == "demo123")
-  { window.location.href = "./demo-admin/"; return } 
-  document.getElementById("popupError").textContent = "❌ Invalid credentials" 
+document.getElementById("popupSubmit").addEventListener("click", async () => {
+  const email = document.getElementById("popupEmail").value
+  const password = document.getElementById("popupPassword").value
+  if (email == "demo@demo.com" && password = "demo123") { window.location.href = "./demo-admin/"; return }
+  document.getElementById("popupError").textContent = "❌ Invalid credentials"
 })
 
 document.addEventListener("click", (e) => {
@@ -344,7 +343,7 @@ function RecMode() {
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const label = makeElement("p", { textContent: "Enter completed courses seperated by commas:" })
+  const label = makeElement("p", { textContent: "Enter completed courses:" })
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
