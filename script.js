@@ -143,6 +143,7 @@ function VerMode() {
   left: 10px;
   border: 0px;
 `
+  checkBoxDiv.style.visibility="hidden"
   const wrapper = makeElement("div")
   wrapper.style.position = "relative"
 
@@ -224,6 +225,8 @@ dropdown.appendChild(noMatch)
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
+  let OldcheckBoxDiv = document.getElementById("checkBoxDiv");
+  if (OldcheckBoxDiv.style.visibility = "hidden") {OldcheckBoxDiv.style.visibility = "visible"}
   const inputEl = document.getElementById("VerInput")
   const currentValue = sanitize(inputEl.value)
   const VerClass = courseOverride || currentValue
@@ -240,10 +243,9 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
     courseHistory = []
   }
   
-  const oldDiv = document.getElementById("checkBoxDiv")
   const CheckBoxDiv = document.createElement("div")
   CheckBoxDiv.id = "checkBoxDiv"
-  oldDiv.replaceWith(CheckBoxDiv)
+  OldcheckBoxDiv.replaceWith(CheckBoxDiv)
 
   if (courseHistory.length > 0) {
     const backBtn = document.createElement("button")
