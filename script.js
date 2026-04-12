@@ -140,7 +140,7 @@ function VerMode() {
   setActiveMode("VerifMode")
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const p = makeElement("p", { type: "text", id: "VerText", innerText: "Enter course to check:" });
+  const p = makeElement("p", { type: "text", id: "VerText", innerText: "  Enter course to check:" });
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
