@@ -125,8 +125,8 @@ document.addEventListener("click", (e) => {
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
+  const p = makeElement("p", { type: "text", id: "VerText", innerText: "Enter course to check:" });
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
-  const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
@@ -146,15 +146,19 @@ function VerMode() {
   checkBoxDiv.style.visibility="hidden"
   const wrapper = makeElement("div")
   wrapper.style.position = "relative"
-
   wrapper.appendChild(input)
   wrapper.appendChild(dropdown)
-
+  MainArea.appendChild(p)
   MainArea.appendChild(wrapper);
-  MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
   input.addEventListener("input",  debounce(VerCourseSearch, 250))
-  button.addEventListener("click", () => VerModeAccept())
+  input.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    const dropdown = document.getElementById("VerDropdown")
+    dropdown.innerHTML = ""
+    VerModeAccept()
+  })
 }
 
 async function VerCourseSearch(e) {
