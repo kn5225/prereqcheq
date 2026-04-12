@@ -144,6 +144,7 @@ button:active { transform: translateY(1px); }
 input[type="text"],
 input[type="email"],
 input[type="password"] {
+  margin-top: 2px;
   font-family: 'DM Sans', sans-serif;
   font-size: 0.88rem;
   padding: 9px 12px;
