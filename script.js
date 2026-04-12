@@ -4,6 +4,20 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let courseHistory = []
 let substitutions = {}
 
+
+function setActiveMode(buttonId) {
+  const buttons = ["VerifMode", "ReccomMode", "ContribMode"]
+
+  buttons.forEach(id => {
+    const btn = document.getElementById(id)
+    if (btn) btn.classList.remove("activeMode")
+  })
+
+  const activeBtn = document.getElementById(buttonId)
+  if (activeBtn) activeBtn.classList.add("activeMode")
+}
+
+
 function parsePrereqString(input) {
   input = input.trim()
   const andGroups = input.split(/\s+AND\s+/)
@@ -123,10 +137,11 @@ document.addEventListener("click", (e) => {
 })
 
 function VerMode() {
+  setActiveMode("VerifMode")
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
+  const p = makeElement("p", { type: "text", id: "VerText", textContent: "  Enter course to check:" });
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
-  const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
@@ -140,19 +155,25 @@ function VerMode() {
   font-size: 0.85rem;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  left: 10px
+  left: 10px;
+  border: 0px;
 `
+  checkBoxDiv.style.visibility="hidden"
   const wrapper = makeElement("div")
   wrapper.style.position = "relative"
-
   wrapper.appendChild(input)
   wrapper.appendChild(dropdown)
-
+  MainArea.appendChild(p)
   MainArea.appendChild(wrapper);
-  MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
   input.addEventListener("input",  debounce(VerCourseSearch, 250))
-  button.addEventListener("click", () => VerModeAccept())
+  input.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    const dropdown = document.getElementById("VerDropdown")
+    dropdown.innerHTML = ""
+    VerModeAccept()
+  })
 }
 
 async function VerCourseSearch(e) {
@@ -161,7 +182,8 @@ async function VerCourseSearch(e) {
 
   dropdown.innerHTML = ""
 
-  if (!query) return
+  if (!query) {dropdown.style.border = "0px"; return}
+  dropdown.style.border = "1px"
 
   const { data, error } = await supabase
     .from(COURSES_TABLE)
@@ -192,7 +214,7 @@ dropdown.appendChild(noMatch)
     const option = document.createElement("div")
     option.textContent = row
     option.style.cssText = `
-    padding: 4px 8px;                 /* 👈 thinner */
+    padding: 4px 8px;
     cursor: pointer;
     border-bottom: 1px solid #e5e7eb; /* separators */
     color: #374151;
@@ -222,6 +244,8 @@ dropdown.appendChild(noMatch)
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
+  let OldcheckBoxDiv = document.getElementById("checkBoxDiv");
+  if (OldcheckBoxDiv.style.visibility = "hidden") {OldcheckBoxDiv.style.visibility = "visible"}
   const inputEl = document.getElementById("VerInput")
   const currentValue = sanitize(inputEl.value)
   const VerClass = courseOverride || currentValue
@@ -238,10 +262,9 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
     courseHistory = []
   }
   
-  const oldDiv = document.getElementById("checkBoxDiv")
   const CheckBoxDiv = document.createElement("div")
   CheckBoxDiv.id = "checkBoxDiv"
-  oldDiv.replaceWith(CheckBoxDiv)
+  OldcheckBoxDiv.replaceWith(CheckBoxDiv)
 
   if (courseHistory.length > 0) {
     const backBtn = document.createElement("button")
@@ -341,6 +364,7 @@ function VerModeMet() {
   })
 }
 function RecMode() {
+  setActiveMode("ReccomMode")
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
@@ -433,6 +457,7 @@ async function RecModeAccept() {
 }
 
 function ContribMode() {
+  setActiveMode("ContribMode")
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
