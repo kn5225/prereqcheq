@@ -140,7 +140,8 @@ function VerMode() {
   font-size: 0.85rem;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  left: 10px
+  left: 10px;
+  border: 0px;
 `
   const wrapper = makeElement("div")
   wrapper.style.position = "relative"
@@ -193,7 +194,7 @@ dropdown.appendChild(noMatch)
     const option = document.createElement("div")
     option.textContent = row
     option.style.cssText = `
-    padding: 4px 8px;                 /* 👈 thinner */
+    padding: 4px 8px;
     cursor: pointer;
     border-bottom: 1px solid #e5e7eb; /* separators */
     color: #374151;
