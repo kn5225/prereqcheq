@@ -161,7 +161,8 @@ async function VerCourseSearch(e) {
 
   dropdown.innerHTML = ""
 
-  if (!query) return
+  if (!query) {dropdown.style.border = "0px"; return}
+  dropdown.style.border = "1px"
 
   const { data, error } = await supabase
     .from(COURSES_TABLE)
