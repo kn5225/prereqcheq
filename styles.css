@@ -305,5 +305,5 @@ label {
 }
 
 .activeMode {
-  border-top: 3px solid var(--maroon);
+  border: 3px solid var(--maroon);
 }
