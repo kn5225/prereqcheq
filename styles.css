@@ -303,3 +303,7 @@ label {
   input[type="email"],
   input[type="password"] { width: 100%; }
 }
+
+.activeMode {
+  border-top: 3px solid var(--maroon);
+}
