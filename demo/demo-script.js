@@ -122,7 +122,7 @@ document.addEventListener("click", (e) => {
 function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. DEMO 404)" });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
@@ -189,9 +189,9 @@ dropdown.appendChild(noMatch)
     const option = document.createElement("div")
     option.textContent = row
     option.style.cssText = `
-    padding: 4px 8px;                 /* 👈 thinner */
+    padding: 4px 8px;              
     cursor: pointer;
-    border-bottom: 1px solid #e5e7eb; /* separators */
+    border-bottom: 1px solid #e5e7eb; 
     color: #374151;
     background: #f3f4f6;
     white-space: nowrap;
@@ -345,11 +345,7 @@ function RecMode() {
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
-  const input = makeElement("input", {
-    type: "text",
-    id: "RecInput",
-    placeholder: "Eg. ECE 201, MATH 132, PHYSICS 151"
-  })
+  const input = makeElement("input", {type: "text", id: "RecInput", placeholder: "Eg. DEMO 101, DEMO 202"})
 
   const hint = makeElement("p", { textContent: "Separate courses with commas" })
   hint.style.fontSize = "0.78rem"
