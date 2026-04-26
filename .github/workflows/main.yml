@@ -1,0 +1,25 @@
+name: Sync Demo Script
+
+on:
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          fetch-depth: 2  # needed to access the previous commit
+
+      - name: Apply diff to demo script
+        run: |
+          git diff HEAD~1 HEAD -- script.js | \
+          git apply --include=demo/demo-script.js -
+
+      - name: Commit and push
+        run: |
+          git config user.email "actions@github.com"
+          git config user.name "GitHub Actions"
+          git add demo/demo-script.js
+          git commit -m "Patch demo-script.js from latest script.js changes" || echo "No changes to commit"
+          git push
