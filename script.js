@@ -389,7 +389,6 @@ function RecMode() {
   })
 
   const resultDiv = makeElement("div", { id: "RecResults" })
-
   MainArea.appendChild(label)
   MainArea.appendChild(input)
   MainArea.appendChild(hint)
