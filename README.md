@@ -1,8 +1,8 @@
 # PrereqCheq
 ### A course prerequisite tool for UMass Amherst engineering students
 
-**Live site:** [kn5225.github.io/prereqcheq](https://kn5225.github.io/prereqcheq/)&nbsp;&nbsp;·&nbsp;&nbsp;  
-**Demo:** [kn5225.github.io/prereqcheq/demo](https://kn5225.github.io/prereqpheq/demo)
+**Live site:** [kn5225.github.io/prereqcheq](https://kn5225.github.io/prereqcheq/)     
+**Demo:** [kn5225.github.io/prereqcheq/demo](https://kn5225.github.io/prereqpheq/demo)     
 
 ---
 
