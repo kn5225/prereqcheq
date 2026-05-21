@@ -195,6 +195,8 @@ async function VerCourseSearch(e) {
     console.error(error)
     return
   }
+  console.log("Query:", query)
+  console.log("Data:", data)
 
   if (!data || data.length === 0) {
     const noMatch = document.createElement("div")
