@@ -189,14 +189,13 @@ async function VerCourseSearch(e) {
     .from(COURSES_TABLE)
     .select("COURSE")
     .ilike("COURSE", `%${query}%`)
+    .order("COURSE", { ascending: true })
     .limit(10)
 
   if (error) {
     console.error(error)
     return
   }
-  console.log("Query:", query)
-  console.log("Data:", data)
 
   if (!data || data.length === 0) {
     const noMatch = document.createElement("div")
