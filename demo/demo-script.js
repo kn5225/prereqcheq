@@ -4,6 +4,19 @@ const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let courseHistory = []
 let substitutions = {}
 
+function setActiveMode(buttonId) {
+  const buttons = ["VerifMode", "ReccomMode", "ContribMode"]
+
+  buttons.forEach(id => {
+    const btn = document.getElementById(id)
+    if (btn) btn.classList.remove("activeMode")
+  })
+
+  const activeBtn = document.getElementById(buttonId)
+  if (activeBtn) activeBtn.classList.add("activeMode")
+}
+
+
 function parsePrereqString(input) {
   input = input.trim()
   const andGroups = input.split(/\s+AND\s+/)
