@@ -5,7 +5,7 @@ let courseHistory = []
 let substitutions = {}
 
 function setActiveMode(buttonId) {
-  const buttons = ["VerifMode", "ReccomMode", "ContribMode"]
+  const buttons = ["VerifMode", "ReccomMode", "ContribMode", "HomeMode"]
 
   buttons.forEach(id => {
     const btn = document.getElementById(id)
@@ -134,11 +134,13 @@ document.addEventListener("click", (e) => {
 })
 
 function VerMode() {
+  setActiveMode("VerifMode")
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. DEMO 404)" });
   const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
+  checkBoxDiv.style.visibility = "hidden"
   const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
   position: absolute;
@@ -179,6 +181,7 @@ async function VerCourseSearch(e) {
     .select("COURSE")
     .ilike("COURSE", `%${query}%`)
     .limit(10)
+    .order("COURSE", { ascending: true })
 
   if (error) {
     console.error(error)
@@ -352,6 +355,7 @@ function VerModeMet() {
   })
 }
 function RecMode() {
+  setActiveMode("ReccomMode")
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
