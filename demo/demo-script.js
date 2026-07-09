@@ -60,6 +60,7 @@ function attachListeners() {
   document.getElementById("VerifMode").addEventListener("click", VerMode)
   document.getElementById("ReccomMode").addEventListener("click", RecMode)
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
+  document.getElementById("HomeMode").addEventListener("click", HomeMode)
   document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")})
 }
@@ -532,4 +533,8 @@ async function ContribModeAccept() {
     return
   }
   result.textContent = "Submitted for review! Thank you."
+}
+
+function HomeMode() {
+  window.location.href = "../"
 }
