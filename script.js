@@ -141,6 +141,8 @@ function VerMode() {
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
   const p = makeElement("p", { type: "text", id: "VerText", textContent: "  Enter course to check:" });
+  p.style.fontWeight = "500"
+  p.style.marginBottom = "8px"
   const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. ECE 241)" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
   const dropdown = makeElement("div", { id: "VerDropdown" })
