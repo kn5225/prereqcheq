@@ -73,7 +73,8 @@ function attachListeners() {
   document.getElementById("VerifMode").addEventListener("click", VerMode)
   document.getElementById("ReccomMode").addEventListener("click", RecMode)
   document.getElementById("ContribMode").addEventListener("click", ContribMode)
-  document.getElementById("HomeMode").addEventListener("click", HomeMode)
+  document.getElementById("HomeMode").addEventListener("click", () => {
+    window.location.href = "../"})
   document.getElementById("AdminMode").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.add("active")})
 }
