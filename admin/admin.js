@@ -212,7 +212,7 @@ async function AdmUpdateSearch() {
 
   input2.addEventListener("input", (e) => {
   const val = e.target.value.trim().toUpperCase()
-  if (val === "None") {
+  if (val === "NONE") {
     preview.textContent = "No prerequisites"
     prereqHint.textContent = ""
     return
