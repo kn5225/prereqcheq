@@ -137,10 +137,9 @@ function VerMode() {
   setActiveMode("VerifMode")
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
-  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. DEMO 404)" });
-  const button = makeElement("button", { type: "button", id: "VerModeSubmit", innerText: "Submit" });
+  const p = makeElement("p", { type: "text", id: "VerText", textContent: "  Enter course to check:" });
+  const input = makeElement("input", { type: "text", id: "VerInput", placeholder: "Enter course: (Eg. DEMO 202)" });
   const checkBoxDiv = makeElement("div", { id: "checkBoxDiv" });
-  checkBoxDiv.style.visibility = "hidden"
   const dropdown = makeElement("div", { id: "VerDropdown" })
   dropdown.style.cssText = `
   position: absolute;
@@ -153,19 +152,25 @@ function VerMode() {
   font-size: 0.85rem;
   z-index: 1000;
   box-shadow: 0 2px 6px rgba(0,0,0,0.08);
-  left: 10px
+  left: 10px;
+  border: 0px;
 `
+  checkBoxDiv.style.visibility="hidden"
   const wrapper = makeElement("div")
   wrapper.style.position = "relative"
-
   wrapper.appendChild(input)
   wrapper.appendChild(dropdown)
-
+  MainArea.appendChild(p)
   MainArea.appendChild(wrapper);
-  MainArea.appendChild(button);
   MainArea.appendChild(checkBoxDiv);
   input.addEventListener("input",  debounce(VerCourseSearch, 250))
-  button.addEventListener("click", () => VerModeAccept())
+  input.addEventListener("keydown", (e) => {
+    if (e.key !== "Enter") return
+    e.preventDefault()
+    const dropdown = document.getElementById("VerDropdown")
+    dropdown.innerHTML = ""
+    VerModeAccept()
+  })
 }
 
 async function VerCourseSearch(e) {
@@ -174,14 +179,15 @@ async function VerCourseSearch(e) {
 
   dropdown.innerHTML = ""
 
-  if (!query) return
+  if (!query) {dropdown.style.border = "0px"; return}
+  dropdown.style.border = "1px"
 
   const { data, error } = await supabase
     .from(COURSES_TABLE)
     .select("COURSE")
     .ilike("COURSE", `%${query}%`)
-    .limit(10)
     .order("COURSE", { ascending: true })
+    .limit(10)
 
   if (error) {
     console.error(error)
@@ -206,9 +212,9 @@ dropdown.appendChild(noMatch)
     const option = document.createElement("div")
     option.textContent = row
     option.style.cssText = `
-    padding: 4px 8px;              
+    padding: 4px 8px;
     cursor: pointer;
-    border-bottom: 1px solid #e5e7eb; 
+    border-bottom: 1px solid #e5e7eb; /* separators */
     color: #374151;
     background: #f3f4f6;
     white-space: nowrap;
@@ -236,6 +242,8 @@ dropdown.appendChild(noMatch)
 }
 
 async function VerModeAccept(courseOverride = null, isBack = false) {
+  let OldcheckBoxDiv = document.getElementById("checkBoxDiv");
+  if (OldcheckBoxDiv.style.visibility = "hidden") {OldcheckBoxDiv.style.visibility = "visible"}
   const inputEl = document.getElementById("VerInput")
   const currentValue = sanitize(inputEl.value)
   const VerClass = courseOverride || currentValue
@@ -252,10 +260,9 @@ async function VerModeAccept(courseOverride = null, isBack = false) {
     courseHistory = []
   }
   
-  const oldDiv = document.getElementById("checkBoxDiv")
   const CheckBoxDiv = document.createElement("div")
   CheckBoxDiv.id = "checkBoxDiv"
-  oldDiv.replaceWith(CheckBoxDiv)
+  OldcheckBoxDiv.replaceWith(CheckBoxDiv)
 
   if (courseHistory.length > 0) {
     const backBtn = document.createElement("button")
@@ -363,7 +370,11 @@ function RecMode() {
   label.style.fontWeight = "500"
   label.style.marginBottom = "8px"
 
-  const input = makeElement("input", {type: "text", id: "RecInput", placeholder: "Eg. DEMO 101, DEMO 202"})
+  const input = makeElement("input", {
+    type: "text",
+    id: "RecInput",
+    placeholder: "Eg. DEMO 101, DEMO 202, DEMO 303"
+  })
 
   const hint = makeElement("p", { textContent: "Separate courses with commas" })
   hint.style.fontSize = "0.78rem"
@@ -376,7 +387,6 @@ function RecMode() {
   })
 
   const resultDiv = makeElement("div", { id: "RecResults" })
-
   MainArea.appendChild(label)
   MainArea.appendChild(input)
   MainArea.appendChild(hint)
@@ -444,15 +454,16 @@ async function RecModeAccept() {
 }
 
 function ContribMode() {
+  setActiveMode("ContribMode")
   const MainArea = getMainArea()
   MainArea.innerHTML = ""
 
-  const input1 = makeElement("input", { type: "text", id: "ContribCourse", placeholder: "Enter course (Eg. ECE 213)" })
+  const input1 = makeElement("input", { type: "text", id: "ContribCourse", placeholder: "Enter course (Eg. DEMO 505)" })
   const courseHint = makeElement("p", { id: "ContribCourseHint" })
   courseHint.style.fontSize = "12px"
   courseHint.style.color = "gray"
 
-  const input2 = makeElement("input", { type: "text", id: "ContribPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "NONE"' })
+  const input2 = makeElement("input", { type: "text", id: "ContribPrereqs", placeholder: 'Enter prerequisites (Eg. (DEMO 101 OR DEMO 202) AND (DEMO 303)) or "NONE"' })
   const prereqHint = makeElement("p", { id: "ContribPrereqHint" })
   prereqHint.style.fontSize = "12px"
   prereqHint.style.color = "gray"
@@ -470,7 +481,7 @@ function ContribMode() {
       courseHint.textContent = "Valid format"
       courseHint.style.color = "green"
     } else {
-      courseHint.textContent = "Expected format: DEPT 000 (Eg. ECE 210)"
+      courseHint.textContent = "Expected format: DEPT 000 (Eg. DEMO 210)"
       courseHint.style.color = "black"
     }
   })
@@ -550,8 +561,4 @@ async function ContribModeAccept() {
     return
   }
   result.textContent = "Submitted for review! Thank you."
-}
-
-function HomeMode() {
-  window.location.href = "../"
 }
