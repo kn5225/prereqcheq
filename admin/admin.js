@@ -104,7 +104,7 @@ function AdmModeAdd() {
   const input3 = makeElement("input", { type: "text", id: "AdmAddCourse", placeholder: "Enter course (Eg. ECE 213)" })
   const courseHint = makeElement("p", { id: "AdminAddCourseHint" })
   const input4 = makeElement("input", { type: "text", id: "AdmAddPrereqs", placeholder: 'Enter prerequisites (Eg. (MATH 132 OR PHYSICS 151) AND (CS 187)) or "NONE"' })
-  const prereqHint = makeElement("p", { id: "AdmAaddPrereqHint" })
+  const prereqHint = makeElement("p", { id: "AdmAddPrereqHint" })
   const preview = makeElement("p", { id: "prereqPreview" })
   const button1 = makeElement("button", { type: "button", innerText: "Submit" })
   const result = makeElement("p", { id: "AddResult" })
@@ -207,6 +207,7 @@ async function AdmUpdateSearch() {
   const currentPrereqs = makeElement("p", { textContent: `Current prerequisites: ${JSON.stringify(current.PREREQS)}` })
   const input2 = makeElement("input", { type: "text", id: "UpdatePrereqs", placeholder: 'Enter new prerequisites or "NONE"' })
   const preview = makeElement("p", { id: "UpdatePreview" })
+  const prereqHint = makeElement("p", { id: "AdmAddPrereqHint" })
   const updateBtn = makeElement("button", { type: "button", id: "UpdateSubmit", innerText: "Update" })
   const updateResult = makeElement("p", { id: "UpdateConfirm" })
 
@@ -242,7 +243,7 @@ async function AdmUpdateAccept(course) {
   const prereqraw = sanitize(document.getElementById("UpdatePrereqs").value)
   const updateResult = document.getElementById("UpdateConfirm")
 
-  if (!isValidPrereqs(prereqraw)) { updateResult.textContent = "❌ Prerequisites too complex or too long"; return }
+  if (!isValidPrereqs(prereqraw) && prereqraw !== "NONE") { updateResult.textContent = "❌ Prerequisites too complex or too long"; return }
 
   let prerequisites = []
   if (prereqraw && prereqraw !== "NONE") {
@@ -285,13 +286,13 @@ async function AdmReview() {
     const rejectBtn = makeElement("button", { innerText: "❌ Reject" })
 
     approveBtn.addEventListener("click", async () => {
-      if (submission.is_correction){
-      const { data: existing } = await supabase
-      .from(COURSES_TABLE)
-      .select("COURSE")
-      .eq("COURSE", submission.COURSE)
-      if (error) { div.appendChild(makeElement("p", { textContent: "❌ Error applying correction" })); return } 
-    }
+      if (submission.is_correction) {
+  const { error: updateError } = await supabase
+    .from(COURSES_TABLE)
+    .update({ PREREQS: submission.PREREQS })
+    .eq("COURSE", submission.COURSE)
+  if (updateError) { div.appendChild(makeElement("p", { textContent: "❌ Error applying correction" })); return }
+}
     else {
     const { data: existing } = await supabase
       .from(COURSES_TABLE)
