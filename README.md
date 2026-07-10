@@ -232,4 +232,4 @@ When entering prerequisites via the admin or contribution form, use natural lang
 
 ## Disclaimer
 
-Course data is sourced from Coursicle and the UMass Amherst course catalog. Always verify prerequisites with your academic advisor or the [official UMass course catalog](https://catalog.umass.edu) before registering.
+Course data is sourced from Coursicle. Always verify prerequisites with your academic advisor or the official UMass course catalog before registering.
