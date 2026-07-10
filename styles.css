@@ -304,10 +304,16 @@ label {
 }
 
 .activeMode {
-  border: 3px solid var(--maroon);
+  border: 1px solid var(--maroon);
 }
 
 #ContribPrereqs, #RecInput {
   width: 100%;
   max-width: 520px;
 }
+
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+
