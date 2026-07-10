@@ -156,7 +156,6 @@ async function AdmUpdateSearch() {
   const result = document.getElementById("UpdateResult")
 
   if (!course) { result.textContent = "❌ Course name cannot be empty"; return }
-
   const { data, error } = await supabase
     .from(COURSES_TABLE)
     .select("*")
