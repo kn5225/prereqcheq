@@ -308,3 +308,8 @@ label {
 .activeMode {
   border: 3px solid var(--maroon);
 }
+
+#ContribPrereqs, #RecInput {
+  width: 100%;
+  max-width: 480px;
+}
