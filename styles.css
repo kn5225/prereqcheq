@@ -115,8 +115,6 @@ button:hover {
   border-color: var(--maroon);
 }
 
-button:active { transform: translateY(1px); }
-
 #AdminMode {
   font-size: 0.72rem;
   color: var(--border);
