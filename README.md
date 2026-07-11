@@ -213,7 +213,7 @@ if (email === "demo@demo.com" && password === "demo123") {
 Change `demo@demo.com` and `demo123` to whatever you want. No Supabase user needs to be created since this is just a client-side check that redirects to the demo admin site. The demo admin itself has no authentication.
 
 If you don't want a demo at all, remove the `DemoMode` button from `index.html` and delete the `demo/` folder entirely.
----
+
 
 ## Database schema
 
