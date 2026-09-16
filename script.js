@@ -118,7 +118,10 @@ function isRateLimited(action, limitMs = 60000, maxAttempts = 3) {
 }
 loadSubstitutions()
 attachListeners()
-supabase.from("analytics").insert({ page: "main" })
+console.log("logging visit")
+supabase.from("analytics").insert({ page: "main" }).then(({ error }) => {
+  console.log("Analytics error:", error)
+})
 
 document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.remove("active")
