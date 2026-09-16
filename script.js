@@ -3,6 +3,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js"
 const supabase = createClient(SUPABASE_URL, SUPABASE_KEY)
 let courseHistory = []
 let substitutions = {}
+const rateLimits = {}
 
 
 function setActiveMode(buttonId) {
@@ -107,8 +108,17 @@ function debounce(fn, delay = 300) {
   }
 }
 
-await loadSubstitutions()
+function isRateLimited(action, limitMs = 60000, maxAttempts = 3) {
+  const now = Date.now()
+  if (!rateLimits[action]) rateLimits[action] = []
+  rateLimits[action] = rateLimits[action].filter(t => now - t < limitMs)
+  if (rateLimits[action].length >= maxAttempts) return true
+  rateLimits[action].push(now)
+  return false
+}
+loadSubstitutions()
 attachListeners()
+supabase.from("analytics").insert({ page: "main" })
 
 document.getElementById("popupClose").addEventListener("click", () => {
   document.getElementById("adminPopup").classList.remove("active")
@@ -137,6 +147,7 @@ document.addEventListener("click", (e) => {
 })
 
 function VerMode() {
+  courseHistory = []
   setActiveMode("VerifMode")
   let MainArea = getMainArea();
   MainArea.innerHTML = "";
@@ -524,6 +535,10 @@ async function ContribModeAccept() {
   const course = formatCourse(document.getElementById("ContribCourse").value)
   const prereqraw = sanitize(document.getElementById("ContribPrereqs").value)
   const result = document.getElementById("ContribResult")
+  if (isRateLimited("submission")) {
+  result.textContent = "❌ Too many submissions. Please wait a minute."
+  return
+  }
 
   if (!course) {
     result.textContent = "Course name cannot be empty"
